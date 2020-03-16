@@ -28,3 +28,32 @@ app-root {
     flex-direction: column;
     justify-content: space-between;
 }
+
+
+main{    
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 50%;            
+    height: 25%;     
+    display: flex;    
+}
+.card__internal {   
+    margin: 0.2em; 
+    width: 100%;    
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px gray;    
+    background-color: rgba(173, 216, 230, 0.493);
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgba(173, 216, 230, 0.712);
+    }
+
+    
+    
+}
