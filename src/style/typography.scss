@@ -1,0 +1,30 @@
+:root {
+    --clr-primary: rgba(128, 128, 128, 0.603);
+    --clr-accent: rgba(128, 128, 128, 0.781);
+}
+
+
+*, *::after, *::before {
+    box-sizing: inherit;         
+}
+
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+ 
+}
+
+
+
+
+body {
+    height: 100vh;    
+}
+
+app-root {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
