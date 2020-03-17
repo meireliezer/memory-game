@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MemoryGameManagerService, ILevelMetadata } from './core/memory-game-manager.service';
+import { MemoryDataService } from './core/memory-data.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,10 @@ export class AppComponent {
   public levelMetadata: ILevelMetadata;
 
 
-  constructor(private memoryGameManagerService: MemoryGameManagerService){
+  constructor(private memoryGameManagerService: MemoryGameManagerService, 
+              private memoryDataService: MemoryDataService){
     this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
+    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
   }
 
   public get level(){
@@ -26,11 +29,13 @@ export class AppComponent {
   public onNextLevel() {    
     this.memoryGameManagerService.nextLevel();
     this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
+    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
   }
 
   public onPrevLevel() {
     this.memoryGameManagerService.prevLevel();
     this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
+    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
   }
 
   public getLevelMetadata(){
@@ -46,11 +51,7 @@ export class AppComponent {
   }
 
   public getData(){
-    let data = [];
-    for(let i = 0; i< this.levelMetadata.cards; ++i){
-      data.push(i+1);
-    }
-    return data;
+    return this.levelMetadata.data;
   }
   
 

@@ -8,9 +8,9 @@
 <main>    
 
 
-  <ng-container *ngFor="let i of getData(); index as idx ">  
+  <ng-container *ngFor="let data of getData(); index as idx ">  
     <app-card class="app-card" 
-              [data]="idx"
+              [data]="data"
               [ngStyle]="getCardLevelDimension()"
               >
     </app-card>
