@@ -5,49 +5,11 @@
   <div class="header__section timer">Timer<div class="value">00:00.00</div></div>
   <div class="header__section lives">harts</div>
 </header>
-<main>
-  <div class="card">
-    <div class="card__internal">1</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">2</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">3</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">4</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">5</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">6</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">7</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">8</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">9</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">10</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">11</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">12</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">13</div>
-  </div>
-  <div class="card">
-    <div class="card__internal">14</div>
-  </div>
+<main>  
+  <ng-container *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14];  index as data" > 
+    <app-card class="app-card" [data]="data"></app-card>
+  </ng-container>
+  
 </main>
 <footer class="actions">
   <div class="action">&lt;</div>
