@@ -84,6 +84,10 @@ export class AppComponent implements AfterViewInit{
   
   public onCardClicked(cardClicked:ICardClicked){
     
+    if( this._gameState === GAME_STATE.INIT  ){
+      this.onRun();
+    }
+
     // First pair Click
     if(!this._firstCardClicked) {
       this._firstCardClicked = cardClicked;
@@ -100,6 +104,16 @@ export class AppComponent implements AfterViewInit{
           }
         });
         this._firstCardClicked = null;        
+
+        // ---------------------------------------------
+        // Complete game
+        // ---------------------------------------------
+        if(this._totalPairs === this._levelMetadata.cards/2){
+          clearInterval(this._intervalHandler);
+          this._intervalHandler = null;
+
+          this.memoryGameManagerService.completeLevel(this.timer, this.current);
+        }
       } 
       // Diffrent cards
       else {        
@@ -132,17 +146,10 @@ export class AppComponent implements AfterViewInit{
       
       if(this.current > 0 ){
         --this.current;
-      }
-      
-      if(this.timer === 0){
+      } else {
         this._gameState = GAME_STATE.END;
       }
-
-      if(this._totalPairs === this._levelMetadata.cards/2){
-        clearInterval(this._intervalHandler);
-        this._intervalHandler = null;
-      }
-
+      
     }, 1000);
   }
 
