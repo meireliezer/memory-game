@@ -78,6 +78,22 @@ export class AppComponent implements AfterViewInit{
     return style;
   }
 
+  public currentSytle(){
+
+    let backgroundColor;
+    if( this.current === 0) {
+      backgroundColor = {
+        backgroundColor: 'red'
+      };
+    } else if(this.current < 10) {
+      backgroundColor = {
+        backgroundColor: 'yellow'
+      };
+    }
+        
+    return  backgroundColor;
+  }
+
   public getData(){
     return this._levelMetadata.data;
   }
