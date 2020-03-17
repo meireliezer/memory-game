@@ -3,6 +3,15 @@ import { MemoryGameManagerService, ILevelMetadata } from './core/memory-game-man
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent } from './memory/card/card/card.component';
 
+
+enum GAME_STATE {
+  INIT,
+  RUN,
+  END,
+}
+
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,22 +19,25 @@ import { ICardClicked, CardComponent } from './memory/card/card/card.component';
 })
 export class AppComponent implements AfterViewInit{
   
-
-  public levelMetadata: ILevelMetadata;
-
-
   @ViewChildren(CardComponent)
   _cardComponents: QueryList<CardComponent>;
+  
+  public timer: number;
+  public current: number;
+
 
 
   private _firstCardClicked: ICardClicked;
   private _totalPairs: number;
+  private _levelMetadata: ILevelMetadata;
+  private _gameState: GAME_STATE;
+  private _intervalHandler: any;
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService){
-    this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
-    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
-    this._totalPairs = 0;
+
+    this.setNewLevel();    
+    
   }
 
 
@@ -42,37 +54,34 @@ export class AppComponent implements AfterViewInit{
     return this.memoryGameManagerService.getUserMaxLevel();
   }
 
+  public get gameState(){
+    return this._gameState;
+  }
+
   public onNextLevel() {    
-    this.memoryGameManagerService.nextLevel();
-    this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
-    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
-    this._totalPairs = 0;
+    this.setNewLevel(true);
   }
 
   public onPrevLevel() {
-    this.memoryGameManagerService.prevLevel();
-    this.levelMetadata = this.memoryGameManagerService.getLevelMetadata();
-    this.levelMetadata.data  =  this.memoryDataService.getRandomPairs(this.levelMetadata.cards/2);
-    this._totalPairs = 0;
+    this.setNewLevel(false);
   }
 
   public getLevelMetadata(){
-    return this.levelMetadata;
+    return this._levelMetadata;
   }
 
   public getCardLevelDimension()  {
     let style = {
-                  width: this.levelMetadata.width, 
-                  height: this.levelMetadata.height
+                  width: this._levelMetadata.width, 
+                  height: this._levelMetadata.height
                 };
     return style;
   }
 
   public getData(){
-    return this.levelMetadata.data;
+    return this._levelMetadata.data;
   }
   
-
   public onCardClicked(cardClicked:ICardClicked){
     
     // First pair Click
@@ -90,14 +99,10 @@ export class AppComponent implements AfterViewInit{
             cardComponent.pair();
           }
         });
-        this._firstCardClicked = null;
-
-        console.log('pairs');
+        this._firstCardClicked = null;        
       } 
       // Diffrent cards
-      else {
-        console.log('worng');   
-        
+      else {        
         setTimeout(()=>{
           this._cardComponents.forEach( cardComponent => {
             if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
@@ -106,14 +111,59 @@ export class AppComponent implements AfterViewInit{
           });
           this._firstCardClicked = null;     
         }, 250);
-
       }
   
     } 
-
-
-    console.log(cardClicked);
   }
 
 
+  public onRun(){
+    
+    // Refresh
+    if( this._gameState !== GAME_STATE.INIT  ){
+      this.setNewLevel();
+      return;
+    }
+    
+    this._gameState = GAME_STATE.RUN;
+    this._intervalHandler = setInterval(()=>{
+      
+      ++this.timer;
+      
+      if(this.current > 0 ){
+        --this.current;
+      }
+      
+      if(this.timer === 0){
+        this._gameState = GAME_STATE.END;
+      }
+
+      if(this._totalPairs === this._levelMetadata.cards/2){
+        clearInterval(this._intervalHandler);
+        this._intervalHandler = null;
+      }
+
+    }, 1000);
+  }
+
+
+  //next:  true-next level, false, prev level, undefine refresh current level
+  private setNewLevel(next?: boolean){
+
+    if(next ===  true){
+      this.memoryGameManagerService.nextLevel();
+    } else if( next === false) {
+      this.memoryGameManagerService.prevLevel();
+    }    
+    this._levelMetadata = this.memoryGameManagerService.getLevelMetadata();
+    this._levelMetadata.data  =  this.memoryDataService.getRandomPairs(this._levelMetadata.cards/2);
+    this._totalPairs = 0;
+    this._gameState = GAME_STATE.INIT;
+    this.timer = 0;
+    this.current = this._levelMetadata.score;
+    if(this._intervalHandler){
+      clearInterval(this._intervalHandler);
+      this._intervalHandler = null;
+    }
+  }
 }
