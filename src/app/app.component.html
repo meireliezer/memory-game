@@ -12,6 +12,9 @@
     <app-card class="app-card" 
               [data]="data"
               [ngStyle]="getCardLevelDimension()"
+              [cardIndex] = "idx"
+
+              (cardClicked)=onCardClicked($event)
               >
     </app-card>
   </ng-container>
