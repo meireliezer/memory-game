@@ -18,7 +18,11 @@
     &:hover {
         background-color: #{var(--clr-accent)};
     }
+}
 
-    
+.disabled {
+    pointer-events: none;
+    cursor: initial;
+    background-color: rgba(0, 0, 0, 0.315);
 }
 

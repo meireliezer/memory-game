@@ -20,7 +20,11 @@
   
 </main>
 <footer class="actions">
-  <div class="action" (click)="onPrevLevel()">&lt;</div>
+  <div class="action" 
+      [ngClass]="{disabled: (level === 1)}"
+      (click)="onPrevLevel()">&lt;</div>
   <div class="action">Refresh</div>
-  <div class="action" (click)="onNextLevel()">&gt;</div> 
+  <div class="action" 
+      [ngClass]="{disabled: (level === userMaxLevel)}"
+   (click)="onNextLevel()">&gt;</div> 
 </footer>

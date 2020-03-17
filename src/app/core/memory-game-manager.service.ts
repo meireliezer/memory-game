@@ -16,19 +16,11 @@ export interface ILevelMetadata {
 export class MemoryGameManagerService {
 
 
-  
-
-
-
 
   private _currentLevel = 1;
-  private _maxLevel = 4;
+  private _useMaxLevel = 4;
   private _totalScore = 0;
   private _stepScore = 999;
-
-  
-
-
 
   private gameMetaData: Array<ILevelMetadata> = [
     {
@@ -92,9 +84,12 @@ export class MemoryGameManagerService {
   public getCurrentLevel(){
     return this._currentLevel;
   }
+  public getUserMaxLevel(){
+    return this._useMaxLevel;
+  }
 
-  public getMaxLevel(){
-    return this._maxLevel;
+  public getEndLevel() {
+    this.gameMetaData.length;
   }
 
   public getLevelMetadata() {
@@ -102,9 +97,14 @@ export class MemoryGameManagerService {
   }
 
   public nextLevel(){
+
+    if(this._currentLevel === this.gameMetaData.length){
+      return this._currentLevel;
+    }
+
     ++this._currentLevel;
-    if(this._maxLevel < this._currentLevel){
-      this._maxLevel = this._currentLevel;
+    if(this._useMaxLevel < this._currentLevel){
+      this._useMaxLevel = this._currentLevel;
     }
 
     return this._currentLevel;
@@ -114,8 +114,6 @@ export class MemoryGameManagerService {
     if(this._currentLevel > 1){
       --this._currentLevel;
     }
-
-
     return this._currentLevel;
   }
 

@@ -19,6 +19,9 @@ export class AppComponent {
   public get level(){
     return this.memoryGameManagerService.getCurrentLevel();
   }
+  public get userMaxLevel(){
+    return this.memoryGameManagerService.getUserMaxLevel();
+  }
 
   public onNextLevel() {    
     this.memoryGameManagerService.nextLevel();
