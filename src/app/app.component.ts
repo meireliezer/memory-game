@@ -1,7 +1,9 @@
 import { Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { MemoryGameManagerService, ILevelMetadata } from './core/memory-game-manager.service';
+import { MemoryGameManagerService} from './core/memory-game-manager.service';
+import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent } from './memory/card/card/card.component';
+
 
 
 enum GAME_STATE {
@@ -38,7 +40,9 @@ export class AppComponent implements AfterViewInit{
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService){
 
-    this.setNewLevel();    
+    
+    
+                this.setNewLevel();    
     this.lives = this.memoryGameManagerService.getLives();
   }
 
@@ -206,4 +210,7 @@ export class AppComponent implements AfterViewInit{
       this.memoryGameManagerService.changeLive(lives);
     }
   }
+
+
+
 }
