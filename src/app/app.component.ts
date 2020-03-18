@@ -39,8 +39,7 @@ export class AppComponent {
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService){
     
-      this.lives = this.memoryGameManagerService.getLives();
-      this.setNewLevel();        
+                this.init();
   }
 
 
@@ -193,6 +192,18 @@ export class AppComponent {
         }
       }        
     }, 1000);
+  }
+
+
+  public onReset(){
+    this.memoryGameManagerService.reset();
+    this.init();
+  }
+
+  private init(){
+    this.lives = this.memoryGameManagerService.getLives();
+    this.setNewLevel();        
+
   }
 
 

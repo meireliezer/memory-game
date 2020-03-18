@@ -27,13 +27,21 @@
 <footer class="actions">
   <div class="action" 
       [ngClass]="{disabled: (level === 1)}"
-      (click)="onPrevLevel()">&lt;</div>
-  <div class="action"
+      (click)="onPrevLevel()"
+      title="Back"
+      >&larr;</div>
+  <div class="action "
     (click)="onRun()">
-    <div *ngIf="(gameState === 0)">&#9658;</div> <!-- play -->
-    <div *ngIf="(gameState !== 0 )">&#8635;</div> <!-- refresh -->
+    <div *ngIf="(gameState === 0)"  title="Run">&#9658;</div> <!-- play -->
+    <div *ngIf="(gameState !== 0 )" title="Refresh">&#8635;</div> <!-- refresh -->
   </div>
+  <div *ngIf="(lives === 0)" 
+        class="action" 
+        (click)="onReset()"
+        title="Reset">&#8676;</div>
   <div class="action" 
       [ngClass]="{disabled: (level === userMaxLevel)}"
-   (click)="onNextLevel()">&gt;</div> 
+      (click)="onNextLevel()"
+      title="Next"
+   >&rarr;</div> 
 </footer>

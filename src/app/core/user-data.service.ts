@@ -19,7 +19,7 @@ interface ILevelData {
 
 const INIT_USER_MAX_LEVLE = 1
 const INIT_CURRENT_MAX_LEVEL = 1
-const INIT_LIVES = 3;
+const INIT_LIVES = 5;
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +88,15 @@ export class UserDataService {
   }
 
   
-
-
+  public reset() {
+    localStorage.removeItem('userData');
+    this._userData = {
+      levels: [],
+      userMaxLevel: INIT_USER_MAX_LEVLE,
+      currentLevel: INIT_CURRENT_MAX_LEVEL,
+      lives: INIT_LIVES
+    }
+  }
 
   private loadData() {
     let userData = localStorage.getItem('userData');
@@ -97,12 +104,7 @@ export class UserDataService {
       let userDataObj = JSON.parse(userData);
       this._userData = (<IUserData>userDataObj);
     } else {
-      this._userData = {
-        levels: [],
-        userMaxLevel: INIT_USER_MAX_LEVLE,
-        currentLevel: INIT_CURRENT_MAX_LEVEL,
-        lives: INIT_LIVES
-      }
+      this.reset();
     }
   }
 
@@ -110,5 +112,7 @@ export class UserDataService {
     let data = JSON.stringify(this._userData);
     localStorage.setItem('userData', data);
   }
+
+
 
 }

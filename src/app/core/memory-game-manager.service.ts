@@ -15,10 +15,7 @@ export class MemoryGameManagerService {
   
   
   constructor(private userDataService: UserDataService) {
-
-    this._lives = this.userDataService.getLives();
-    this._currentLevel = this.userDataService.getCurrentLevel();
-    this._userMaxLevel = this.userDataService.getUserMaxLevel();
+    this.initFromUserData(); 
   }
 
   public getCurrentLevel(){
@@ -81,5 +78,17 @@ export class MemoryGameManagerService {
       // Save data;
       this.userDataService.setUserMaxLevel(this._userMaxLevel);
     }
+  }
+
+
+  public reset() {
+    this.userDataService.reset();   
+    this.initFromUserData(); 
+  }
+
+  private initFromUserData(){
+    this._lives = this.userDataService.getLives();
+    this._currentLevel = this.userDataService.getCurrentLevel();
+    this._userMaxLevel = this.userDataService.getUserMaxLevel();
   }
 }
