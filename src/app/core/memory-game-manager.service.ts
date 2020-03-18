@@ -33,6 +33,15 @@ export class MemoryGameManagerService {
     return  this._lives;
   }
 
+
+  public getTotalScore(){
+    let total = 0;
+    total = this.userDataService.getLevelHistory()
+    .map( item => item.score)
+    .reduce( (accumulator, currentValue) => accumulator + currentValue, 0);
+    return total;
+  }
+
   public changeLive(lives: number){
     this._lives += lives;
     this.userDataService.setLives(this._lives);

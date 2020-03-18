@@ -54,6 +54,10 @@ export class AppComponent {
     return this._gameState;
   }
 
+  public get totalScore() {
+    return this.memoryGameManagerService.getTotalScore()
+  }
+
   public onNextLevel() {    
     this.setNewLevel(true);
   }
