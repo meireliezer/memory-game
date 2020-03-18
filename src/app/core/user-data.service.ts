@@ -42,7 +42,7 @@ export class UserDataService {
   }
 
   public setLives(lives:number){
-    this._userData.lives += lives;
+    this._userData.lives = lives;
     this.saveData();
   }
 

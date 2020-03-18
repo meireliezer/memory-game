@@ -37,7 +37,8 @@ export class MemoryGameManagerService {
   }
 
   public changeLive(lives: number){
-    return  this._lives += lives;
+    this._lives += lives;
+    this.userDataService.setLives(this._lives);
   }
 
 
