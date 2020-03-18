@@ -8,6 +8,7 @@ enum GAME_STATE {
   INIT,
   RUN,
   END,
+  COMPLETE
 }
 
 
@@ -78,20 +79,20 @@ export class AppComponent implements AfterViewInit{
     return style;
   }
 
-  public currentSytle(){
+  public currentClass(){
+    let currentClass = '';
 
-    let backgroundColor;
-    if( this.current === 0) {
-      backgroundColor = {
-        backgroundColor: 'red'
-      };
-    } else if(this.current < 10) {
-      backgroundColor = {
-        backgroundColor: 'yellow'
-      };
+    if(this._gameState === GAME_STATE.COMPLETE) {
+      currentClass = 'complete';
     }
+    else if( this._gameState === GAME_STATE.END) {
+      currentClass = 'failed';      
+    } else if(this.current < 10) {
+      currentClass = 'warnning';      
+    }
+    
         
-    return  backgroundColor;
+    return  currentClass;
   }
 
   public getData(){
@@ -128,7 +129,9 @@ export class AppComponent implements AfterViewInit{
           clearInterval(this._intervalHandler);
           this._intervalHandler = null;
 
+          this._gameState = GAME_STATE.COMPLETE;
           this.memoryGameManagerService.completeLevel(this.timer, this.current);
+
         }
       } 
       // Diffrent cards

@@ -16,5 +16,19 @@ header {
         text-align: center;
         font-weight: normal;
     }
+
+    .current_score {
+        transition: all ease-in-out 500ms;
+
+        &.complete {
+            background-color: green;
+        }
+        &.warnning {
+            background-color: yellow;
+        }
+        &.failed {
+            background-color: red;
+        }
+    }
 }
 
