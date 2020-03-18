@@ -7,7 +7,7 @@ import { ICardClicked, CardComponent } from './memory/card/card/card.component';
 enum GAME_STATE {
   INIT,
   RUN,
-  END,
+  FAILED,
   COMPLETE
 }
 
@@ -25,6 +25,7 @@ export class AppComponent implements AfterViewInit{
   
   public timer: number;
   public current: number;
+  public lives: number;
 
 
 
@@ -38,7 +39,7 @@ export class AppComponent implements AfterViewInit{
               private memoryDataService: MemoryDataService){
 
     this.setNewLevel();    
-    
+    this.lives = this.memoryGameManagerService.getLives();
   }
 
 
@@ -85,12 +86,12 @@ export class AppComponent implements AfterViewInit{
     if(this._gameState === GAME_STATE.COMPLETE) {
       currentClass = 'complete';
     }
-    else if( this._gameState === GAME_STATE.END) {
+    else if( this._gameState === GAME_STATE.FAILED) {
       currentClass = 'failed';      
     } else if(this.current < 10) {
       currentClass = 'warnning';      
     }
-    
+
         
     return  currentClass;
   }
@@ -166,9 +167,15 @@ export class AppComponent implements AfterViewInit{
       if(this.current > 0 ){
         --this.current;
       } else {
-        this._gameState = GAME_STATE.END;
-      }
-      
+
+        if(this._gameState !== GAME_STATE.FAILED){
+          this._gameState = GAME_STATE.FAILED;
+          if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
+            this.changeLives(-1);  
+          }
+          
+        }
+      }      
     }, 1000);
   }
 
@@ -190,6 +197,13 @@ export class AppComponent implements AfterViewInit{
     if(this._intervalHandler){
       clearInterval(this._intervalHandler);
       this._intervalHandler = null;
+    }
+  }
+
+  private changeLives(lives: number) {
+    if(this.lives > 0 ){
+      this.lives += lives;
+      this.memoryGameManagerService.changeLive(lives);
     }
   }
 }
