@@ -33,6 +33,11 @@ header {
         &.failed {
             background-color: red;
         }
+        &.failed--complete {
+            background-color: red;
+            outline: 5px solid green;
+            outline-offset: -5px;
+        }
     }
 }
 

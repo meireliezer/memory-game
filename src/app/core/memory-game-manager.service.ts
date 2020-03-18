@@ -69,13 +69,13 @@ export class MemoryGameManagerService {
     return this._currentLevel;
   }
 
-  public completeLevel(time: number, score: number){
+  public completeLevel(failed:boolean, time: number, score: number){
 
     // Save data;
     this.userDataService.setLevelData(this._currentLevel, score, time);
 
     // Should enable next level
-    if(this._currentLevel === this._userMaxLevel){
+    if(!failed && (this._currentLevel === this._userMaxLevel) && (this._lives > 0) ){
       ++this._userMaxLevel;
       // Save data;
       this.userDataService.setUserMaxLevel(this._userMaxLevel);

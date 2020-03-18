@@ -9,10 +9,10 @@ import { ICardClicked, CardComponent } from './memory/card/card/card.component';
 enum GAME_STATE {
   INIT,
   RUN,
+  COMPLETE,
   FAILED,
-  COMPLETE
+  FAILED_COMPLETE
 }
-
 
 
 @Component({
@@ -20,16 +20,15 @@ enum GAME_STATE {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit{
-  
-  @ViewChildren(CardComponent)
-  _cardComponents: QueryList<CardComponent>;
-  
+export class AppComponent {
+
   public timer: number;
   public current: number;
   public lives: number;
 
-
+  @ViewChildren(CardComponent)
+  _cardComponents: QueryList<CardComponent>;
+  
 
   private _firstCardClicked: ICardClicked;
   private _totalPairs: number;
@@ -39,19 +38,11 @@ export class AppComponent implements AfterViewInit{
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService){
-
     
-    
-                this.setNewLevel();    
-    this.lives = this.memoryGameManagerService.getLives();
+      this.lives = this.memoryGameManagerService.getLives();
+      this.setNewLevel();        
   }
 
-
-  ngAfterViewInit(): void {
-    this._cardComponents.forEach(card =>{
-      console.log(card);
-    })    
-  }
 
   public get level(){
     return this.memoryGameManagerService.getCurrentLevel();
@@ -85,17 +76,25 @@ export class AppComponent implements AfterViewInit{
   }
 
   public currentClass(){
+    
     let currentClass = '';
 
-    if(this._gameState === GAME_STATE.COMPLETE) {
-      currentClass = 'complete';
+    switch(this._gameState){
+      case GAME_STATE.COMPLETE:
+          currentClass = 'complete';
+          break;
+      case GAME_STATE.FAILED:
+        currentClass = 'failed';
+        break;
+      case GAME_STATE.FAILED_COMPLETE:
+        currentClass = 'failed--complete';
+        break;
+      default:
+        if(this.current < 10) {
+          currentClass = 'warnning';      
+        }
+        break;
     }
-    else if( this._gameState === GAME_STATE.FAILED) {
-      currentClass = 'failed';      
-    } else if(this.current < 10) {
-      currentClass = 'warnning';      
-    }
-
         
     return  currentClass;
   }
@@ -104,6 +103,8 @@ export class AppComponent implements AfterViewInit{
     return this._levelMetadata.data;
   }
   
+
+  // reduce lifes
   public onCardClicked(cardClicked:ICardClicked){
     
     if( this._gameState === GAME_STATE.INIT  ){
@@ -130,13 +131,14 @@ export class AppComponent implements AfterViewInit{
         // ---------------------------------------------
         // Complete game
         // ---------------------------------------------
-        if(this._totalPairs === this._levelMetadata.cards/2){
+        if(this.isComplete()){
+          // Stop timer
           clearInterval(this._intervalHandler);
           this._intervalHandler = null;
-
-          this._gameState = GAME_STATE.COMPLETE;
-          this.memoryGameManagerService.completeLevel(this.timer, this.current);
-
+          // Game Complete state
+          this._gameState = (this.current > 0) ?GAME_STATE.COMPLETE : GAME_STATE.FAILED_COMPLETE;
+          // Store data
+          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);          
         }
       } 
       // Diffrent cards
@@ -149,12 +151,12 @@ export class AppComponent implements AfterViewInit{
           });
           this._firstCardClicked = null;     
         }, 250);
-      }
-  
+      }  
     } 
   }
 
 
+  // Run Button
   public onRun(){
     
     // Refresh
@@ -166,20 +168,30 @@ export class AppComponent implements AfterViewInit{
     this._gameState = GAME_STATE.RUN;
     this._intervalHandler = setInterval(()=>{
       
-      ++this.timer;
-      
+      // Timer
+      ++this.timer;      
+
+      // Score
       if(this.current > 0 ){
         --this.current;
-      } else {
-
-        if(this._gameState !== GAME_STATE.FAILED){
-          this._gameState = GAME_STATE.FAILED;
-          if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
-            this.changeLives(-1);  
+      } 
+      // Failed
+      if(this.current === 0){
+        if(this.isComplete()){
+          this._gameState = GAME_STATE.FAILED_COMPLETE;
+        } else {
+          // Reduce lives
+          if(this._gameState !== GAME_STATE.FAILED){
+            // Only if it is  user max level
+            if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
+              this.changeLives(-1);
+            }
+            
           }
+          this._gameState = GAME_STATE.FAILED;
           
         }
-      }      
+      }        
     }, 1000);
   }
 
@@ -205,12 +217,18 @@ export class AppComponent implements AfterViewInit{
   }
 
   private changeLives(lives: number) {
-    if(this.lives > 0 ){
-      this.lives += lives;
-      this.memoryGameManagerService.changeLive(lives);
+    this.lives += lives;
+    if(this.lives < 0 ){
+      this.lives = 0;
     }
+    this.memoryGameManagerService.changeLive(lives);
   }
 
+  private isFailedStatus(){
+    return (this._gameState === GAME_STATE.FAILED) || (this._gameState === GAME_STATE.FAILED_COMPLETE);
+  }
 
-
+  private isComplete(){
+    return (this._totalPairs === (this._levelMetadata.cards/2));
+  }
 }
