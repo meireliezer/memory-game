@@ -80,4 +80,20 @@ export interface ILevelMetadata {
     score: 20 * 2,
     width: '25%',
     height: '20%'
+  },
+  {
+    level: 10,
+    cards: 22,
+    time: 22 * 2,
+    score: 22 * 2,
+    width: '20%',
+    height: '20%'
+  },
+  {
+    level: 11,
+    cards: 24,
+    time: 24 * 2,
+    score: 24 * 2,
+    width: '20%',
+    height: '20%'
   }]

@@ -12,7 +12,7 @@ export class SoundService {
     this.audioContext = new AudioContext();
   }
 
-  public failed() {
+  public pairfailed() {
     this.beep(999, 500, 300);
     this.beep (999, 210, 300); 
     this.beep(999, 100,300);    
@@ -23,6 +23,12 @@ export class SoundService {
     setTimeout( ()=> this.beep(999, 300, 100), 100);
     setTimeout( ()=> this.beep(999, 500, 100), 200);
     setTimeout( ()=> this.beep(999, 900, 100), 300);
+  }
+
+  public failed(){
+    this.beep(999, 80, 600); 
+    this.beep(999, 800, 700);
+    this.beep(999, 600, 600);
   }
 
   public beepCard(cardId:number){

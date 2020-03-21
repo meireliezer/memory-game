@@ -3,7 +3,7 @@ import { MemoryGameManagerService} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent } from './memory/card/card/card.component';
-import { SoundService } from './share/sound.service';
+import { SoundService } from './core/sound.service';
 
 
 
@@ -149,13 +149,13 @@ export class AppComponent {
           this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);  
           navigator.vibrate([300,300,300]);
           this.soundService.complete();
-          
+
         }
       } 
       // Diffrent cards
       else {        
         navigator.vibrate(250); 
-        this.soundService.failed();
+        this.soundService.pairfailed();
         setTimeout(()=>{
           this._cardComponents.forEach( cardComponent => {
             if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
@@ -196,13 +196,16 @@ export class AppComponent {
         } else {
           // Reduce lives
           if(this._gameState !== GAME_STATE.FAILED){
-            // Only if it is  user max level
+            this.soundService.failed();
+            // Only if it is  user max level            
             if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
               this.changeLives(-1);
+            
             }
             
           }
           this._gameState = GAME_STATE.FAILED;
+         
           
         }
       }        
