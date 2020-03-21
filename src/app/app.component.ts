@@ -3,6 +3,7 @@ import { MemoryGameManagerService} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent } from './memory/card/card/card.component';
+import { SoundService } from './share/sound.service';
 
 
 
@@ -37,7 +38,8 @@ export class AppComponent {
   private _intervalHandler: any;
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
-              private memoryDataService: MemoryDataService){
+              private memoryDataService: MemoryDataService,
+              private soundService: SoundService){
     
                 this.init();
   }
@@ -114,6 +116,8 @@ export class AppComponent {
       this.onRun();
     }
 
+    this.soundService.beepCard(cardClicked.data.id);
+
     // First pair Click
     if(!this._firstCardClicked) {
       this._firstCardClicked = cardClicked;
@@ -130,6 +134,7 @@ export class AppComponent {
           }
         });
         this._firstCardClicked = null;        
+        navigator.vibrate(50);
 
         // ---------------------------------------------
         // Complete game
@@ -141,18 +146,24 @@ export class AppComponent {
           // Game Complete state
           this._gameState = (this.current > 0) ?GAME_STATE.COMPLETE : GAME_STATE.FAILED_COMPLETE;
           // Store data
-          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);          
+          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);  
+          navigator.vibrate([300,300,300]);
+          this.soundService.complete();
+          
         }
       } 
       // Diffrent cards
       else {        
+        navigator.vibrate(250); 
+        this.soundService.failed();
         setTimeout(()=>{
           this._cardComponents.forEach( cardComponent => {
             if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
               cardComponent.reset();
             }
           });
-          this._firstCardClicked = null;     
+          this._firstCardClicked = null;  
+           
         }, 250);
       }  
     } 
