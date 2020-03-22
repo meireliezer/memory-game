@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GAME_METADATA } from './game-metadata.const'
-import { UserDataService } from './user-data.service';
+import { UserDataService } from './windows/user-data.service';
 
 
 

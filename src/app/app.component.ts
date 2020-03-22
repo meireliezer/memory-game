@@ -1,9 +1,11 @@
-import { Component, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy} from '@angular/core';
 import { MemoryGameManagerService} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent } from './memory/card/card/card.component';
-import { SoundService } from './core/sound.service';
+import { SoundService } from './core/windows/sound.service';
+import { VibrateService } from './core/windows/vibrate.service';
+import { FullScreenService } from './core/windows/full-screen.service';
 
 
 
@@ -21,7 +23,7 @@ enum GAME_STATE {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
 
   public timer: number;
   public current: number;
@@ -39,9 +41,17 @@ export class AppComponent {
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
-              private soundService: SoundService){
+              private soundService: SoundService,
+              private vibrateService: VibrateService,
+              private fullscreenService: FullScreenService) {
     
                 this.init();
+
+           
+                
+  }
+  ngOnDestroy(): void {
+    this.fullscreenService.exitFullscreen();
   }
 
 
@@ -109,9 +119,14 @@ export class AppComponent {
   }
   
 
+  private i = true;
+
   // reduce lifes
   public onCardClicked(cardClicked:ICardClicked){
     
+
+
+
     if( this._gameState === GAME_STATE.INIT  ){
       this.onRun();
     }
@@ -134,7 +149,8 @@ export class AppComponent {
           }
         });
         this._firstCardClicked = null;        
-        navigator.vibrate(50);
+        this.vibrateService.pairMatch();
+        
 
         // ---------------------------------------------
         // Complete game
@@ -146,16 +162,16 @@ export class AppComponent {
           // Game Complete state
           this._gameState = (this.current > 0) ?GAME_STATE.COMPLETE : GAME_STATE.FAILED_COMPLETE;
           // Store data
-          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);  
-          navigator.vibrate([300,300,300]);
+          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);            
+          this.vibrateService.complete();
           this.soundService.complete();
 
         }
       } 
       // Diffrent cards
       else {        
-        navigator.vibrate(250); 
-        this.soundService.pairfailed();
+        this.vibrateService.pairMissMatch(); 
+        this.soundService.pairMissMatch();
         setTimeout(()=>{
           this._cardComponents.forEach( cardComponent => {
             if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){

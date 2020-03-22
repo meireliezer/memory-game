@@ -12,7 +12,7 @@ export class SoundService {
     this.audioContext = new AudioContext();
   }
 
-  public pairfailed() {
+  public pairMissMatch() {
     this.beep(999, 500, 300);
     this.beep (999, 210, 300); 
     this.beep(999, 100,300);    
