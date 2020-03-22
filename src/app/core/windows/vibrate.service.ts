@@ -5,24 +5,46 @@ import { Injectable } from '@angular/core';
 })
 export class VibrateService {
 
-  constructor() { }
+  private _enabled: boolean;
+
+  constructor() {
+    this._enabled = localStorage.getItem('vibrate') !== "0";
+   }
+
+
+   public isEnable(){
+    return this._enabled;
+  }
 
 
   public levelFailed(){
-    navigator.vibrate(50);
+    this.vibrate(50);
   }
 
   public complete(){
-    navigator.vibrate([300,300,300]);
+    this.vibrate([300,300,300]);
   }
 
   public pairMatch(){
-    navigator.vibrate(50);
+    this.vibrate(50);
   }
-
 
   public pairMissMatch(){
-    navigator.vibrate(250); 
+    this.vibrate(250); 
   }
 
+  public toggleSound(){
+    this._enabled = !this._enabled;
+    localStorage.setItem('vibrate', this._enabled? "1": "0");
+  }
+
+  private vibrate( arg ){
+    if(!this._enabled){
+      return;
+    }
+
+    navigator.vibrate(arg); 
+  }
+
+  
 }

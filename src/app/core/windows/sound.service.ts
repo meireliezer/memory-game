@@ -5,11 +5,22 @@ import { Injectable } from '@angular/core';
 })
 export class SoundService {
 
+  
+  
+
+  
   private audioContext: AudioContext;
+  private _enabled: boolean;
+
 
   constructor() { 
     // browsers limit the number of concurrent audio contexts, so you better re-use'em
     this.audioContext = new AudioContext();
+    this._enabled = localStorage.getItem('sound') !== "0";
+  }
+
+  public isEnable(){
+    return this._enabled;
   }
 
   public pairMissMatch() {
@@ -36,7 +47,9 @@ export class SoundService {
   }
 
   private beep(vol, freq, duration){
-
+    if(this._enabled === false){
+      return;
+    }
     let oscillator =this.audioContext.createOscillator();
     let gain=this.audioContext.createGain();
     oscillator.connect(gain);
@@ -46,6 +59,12 @@ export class SoundService {
     gain.gain.value=vol*0.01;
     oscillator.start(this.audioContext.currentTime);
     oscillator.stop(this.audioContext.currentTime+duration*0.001);
+  }
+
+
+  public toggleSound(){
+    this._enabled = !this._enabled;
+    localStorage.setItem('sound', this._enabled? "1": "0");
   }
 
 

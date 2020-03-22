@@ -235,6 +235,24 @@ export class AppComponent implements OnDestroy {
     this.init();
   }
 
+  public toggleSound(){
+    this.soundService.toggleSound();
+  }
+
+  public isSoundDisabled(){
+    return !this.soundService.isEnable();
+  }
+
+  public toggleVibrate(){
+    this.vibrateService.toggleSound();
+  }
+
+  public isVibrateDisabled(){
+    return this.vibrateService.isEnable();    
+  }
+
+
+
   private init(){
     this.lives = this.memoryGameManagerService.getLives();
     this.setNewLevel();        
@@ -277,4 +295,6 @@ export class AppComponent implements OnDestroy {
   private isComplete(){
     return (this._totalPairs === (this._levelMetadata.cards/2));
   }
+
+  
 }
