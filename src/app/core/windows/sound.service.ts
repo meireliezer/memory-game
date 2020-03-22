@@ -47,4 +47,25 @@ export class SoundService {
     oscillator.start(this.audioContext.currentTime);
     oscillator.stop(this.audioContext.currentTime+duration*0.001);
   }
+
+
+  private _randomInervals = [];  
+  public randomStart(){
+    for(let i = 0 ; i < 4 ; ++i){
+      let interval  = setInterval( () => {
+        
+        this.beep(999, Math.random()*1000, Math.random()*500);
+
+      }, Math.random()*2000);
+      this._randomInervals.push(interval);
+    }
+  }
+
+  public randomStop(){
+    this._randomInervals.forEach(intrevalHandler => {
+      clearInterval(intrevalHandler);
+    } );
+
+    this._randomInervals = [];
+  }
 }

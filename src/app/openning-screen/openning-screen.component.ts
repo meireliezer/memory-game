@@ -11,9 +11,7 @@ export class OpenningScreenComponent implements OnInit {
   public display =  true;
 
   constructor(private fullscreenService:FullScreenService) {
-    if(this.isIOS()){
-      this.display = false;
-    }    
+                
    }
 
   ngOnInit() {
@@ -21,8 +19,9 @@ export class OpenningScreenComponent implements OnInit {
 
 
   public go(){
-    this.fullscreenService.requestFullscreen();
+    this.fullscreenService.requestFullscreen();  
     this.display =  false;
+
   }
 
   private isIOS(){
