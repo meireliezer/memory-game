@@ -10,7 +10,11 @@ export class OpenningScreenComponent implements OnInit {
 
   public display =  true;
 
-  constructor(private fullscreenService:FullScreenService) { }
+  constructor(private fullscreenService:FullScreenService) {
+    if(this.isIOS()){
+      this.display = false;
+    }    
+   }
 
   ngOnInit() {
   }
@@ -21,7 +25,11 @@ export class OpenningScreenComponent implements OnInit {
     this.display =  false;
   }
 
-
+  private isIOS(){
+    let agent = window.navigator.userAgent;
+    let start = agent.indexOf( "OS " );
+    return  ( (agent.indexOf( "iPhone" ) > -1 || agent.indexOf("iPad" ) > -1 ) && start > -1 );
+  }
 
 
 }
