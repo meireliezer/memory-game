@@ -248,7 +248,7 @@ export class AppComponent implements OnDestroy {
   }
 
   public isVibrateDisabled(){
-    return this.vibrateService.isEnable();    
+    return !this.vibrateService.isEnable();    
   }
 
 
