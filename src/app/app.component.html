@@ -33,10 +33,9 @@
       (click)="onPrevLevel()"
       title="Back"
       >&larr;</div>
-  <div class="action--center "
-    (click)="onRun()">
-    <div class="action"  *ngIf="(gameState === 0)"  title="Run">&#9658;</div> <!-- play -->
-    <div class="action"  *ngIf="(gameState !== 0 )" title="Refresh">&#8635;</div> <!-- refresh -->
+  <div class="action--center">
+    <div class="action"  *ngIf="(gameState === 0)"   (click)="onRun()" title="Run">&#9658;</div> <!-- play -->
+    <div class="action"  *ngIf="(gameState !== 0 )"  (click)="onRun()" title="Refresh">&#8635;</div> <!-- refresh -->
     <div class="action"  [ngClass]="{crossed:isSoundDisabled()}" (click)="toggleSound() "title="Sound">&#x266B;</div>
     <div class="action"  [ngClass]="{crossed:isVibrateDisabled()}" (click)="toggleVibrate()" title="Vibrate">&#x21AD;</div>   
   </div>

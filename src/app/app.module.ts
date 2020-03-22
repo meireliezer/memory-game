@@ -14,7 +14,7 @@ import { OpenningScreenComponent } from './openning-screen/openning-screen.compo
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+  //  AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
