@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CardComponent } from './memory/card/card/card.component';
 import { OpenningScreenComponent } from './openning-screen/openning-screen.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,7 @@ import { OpenningScreenComponent } from './openning-screen/openning-screen.compo
   ],
   imports: [
     BrowserModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   //  AppRoutingModule
   ],
   providers: [],
