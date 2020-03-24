@@ -4,19 +4,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SoundService {
-
-  
-  
-
   
   private audioContext: AudioContext;
   private _enabled: boolean;
+  private _volume: number;
 
 
   constructor() { 
-    // browsers limit the number of concurrent audio contexts, so you better re-use'em
-    this.audioContext = new AudioContext();
+    // browsers limit the number of concurrent audio contexts, so you better re-use'em    
     this._enabled = localStorage.getItem('sound') !== "0";
+    this._volume = 500;
   }
 
   public isEnable(){
@@ -24,31 +21,34 @@ export class SoundService {
   }
 
   public pairMissMatch() {
-    this.beep(999, 500, 300);
-    this.beep (999, 210, 300); 
-    this.beep(999, 100,300);    
+    this.beep(500, 300);
+    this.beep(210, 300); 
+    this.beep(100, 300);    
   }  
 
   public complete(){
-    this.beep(999, 100, 100);
-    setTimeout( ()=> this.beep(999, 300, 100), 100);
-    setTimeout( ()=> this.beep(999, 500, 100), 200);
-    setTimeout( ()=> this.beep(999, 900, 100), 300);
+    this.beep(100, 100);
+    setTimeout( ()=> this.beep(300, 100), 100);
+    setTimeout( ()=> this.beep(500, 100), 200);
+    setTimeout( ()=> this.beep(900, 100), 300);
   }
 
   public failed(){
-    this.beep(999, 80, 600); 
-    this.beep(999, 800, 700);
-    this.beep(999, 600, 600);
+    this.beep(80, 600); 
+    this.beep(800, 700);
+    this.beep(600, 600);
   }
 
   public beepCard(cardId:number){
-    this.beep(999, ((cardId+1)*100), 100);
+    this.beep(((cardId+1)*100), 100);
   }
 
-  private beep(vol, freq, duration){
+  private beep(freq, duration){
     if(this._enabled === false){
       return;
+    }
+    if(!this.audioContext){
+      this.audioContext = new AudioContext();
     }
     let oscillator =this.audioContext.createOscillator();
     let gain=this.audioContext.createGain();
@@ -56,7 +56,7 @@ export class SoundService {
     oscillator.frequency.value=freq;
     oscillator.type="square";
     gain.connect(this.audioContext.destination);
-    gain.gain.value=vol*0.01;
+    gain.gain.value=this._volume*0.01;
     oscillator.start(this.audioContext.currentTime);
     oscillator.stop(this.audioContext.currentTime+duration*0.001);
   }
@@ -73,7 +73,7 @@ export class SoundService {
     for(let i = 0 ; i < 4 ; ++i){
       let interval  = setInterval( () => {
         
-        this.beep(999, Math.random()*1000, Math.random()*500);
+        this.beep(Math.random()*1000, Math.random()*500);
 
       }, Math.random()*2000);
       this._randomInervals.push(interval);

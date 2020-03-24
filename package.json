@@ -4,11 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && node copy_after_build.js",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "copy": "node copy_after_build.js"
+    "copy": "node copy_after_build.js",
+    "prod": "ng build  && node copy_after_build.js"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +23,7 @@
     "@angular/pwa": "^0.900.7",
     "@angular/router": "~8.2.14",
     "@angular/service-worker": "~8.2.14",
+    "copy-dir": "^1.2.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
