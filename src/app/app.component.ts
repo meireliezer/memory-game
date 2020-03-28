@@ -6,6 +6,7 @@ import { ICardClicked, CardComponent } from './memory/card/card/card.component';
 import { SoundService } from './core/windows/sound.service';
 import { VibrateService } from './core/windows/vibrate.service';
 import { FullScreenService } from './core/windows/full-screen.service';
+import { iOS } from './core/windows/utils';
 
 
 
@@ -28,6 +29,7 @@ export class AppComponent implements OnDestroy {
   public timer: number;
   public current: number;
   public lives: number;
+  public isIOS: boolean;
 
   @ViewChildren(CardComponent)
   _cardComponents: QueryList<CardComponent>;
@@ -45,7 +47,8 @@ export class AppComponent implements OnDestroy {
               private vibrateService: VibrateService,
               private fullscreenService: FullScreenService) {
     
-                this.init();
+              this.init();
+              this.isIOS = iOS();
 
            
                 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { iOS } from './utils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,11 @@ export class SoundService {
   constructor() { 
     // browsers limit the number of concurrent audio contexts, so you better re-use'em    
     this._enabled = localStorage.getItem('sound') !== "0";
+    if(iOS()){
+      this._enabled = false;
+    }
     this._volume = 500;
+
   }
 
   public isEnable(){

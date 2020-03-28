@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {iOS} from "./utils";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,9 @@ export class VibrateService {
 
   constructor() {
     this._enabled = localStorage.getItem('vibrate') !== "0";
+    if(iOS()){
+      this._enabled = false;
+    }
    }
 
 
