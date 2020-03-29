@@ -168,7 +168,10 @@ export class AppComponent implements OnDestroy {
           this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);            
           this.vibrateService.complete();
           this.soundService.complete();
-          this.setNewLevel(true);
+          if(this._gameState === GAME_STATE.COMPLETE){
+            this.setNewLevel(true);
+          }
+          
 
         }
       } 
