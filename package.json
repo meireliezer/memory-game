@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "copy": "node copy_after_build.js",
-    "prod": "ng build  && node copy_after_build.js"
+    "prod": "ng build --prod  && node copy_after_build.js"
   },
   "private": true,
   "dependencies": {
