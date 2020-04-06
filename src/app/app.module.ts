@@ -16,7 +16,7 @@ import { environment } from '../environments/environment';
   ],
   imports: [
     BrowserModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    //ServiceWorkerModule.register('./memory-game-dist/ngsw-worker.js', { enabled: environment.production }),
   //  AppRoutingModule
   ],
   providers: [],
