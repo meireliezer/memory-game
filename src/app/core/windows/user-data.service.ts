@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ILevelMetadata} from '../game-metadata.const'
 
-
-interface IUserData {
+interface IUserData {  
   currentLevel: number;
   userMaxLevel: number;
   lives: number;
   levels: Array<ILevelData>;
+  vibrate: boolean;
+  sound: boolean;
+  background: boolean;
 }
 
 interface ILevelData {
@@ -16,6 +17,8 @@ interface ILevelData {
 }
 
 
+
+const PRODUCTION_VERSION = 1;
 
 const INIT_USER_MAX_LEVLE = 1
 const INIT_CURRENT_MAX_LEVEL = 1
@@ -64,6 +67,33 @@ export class UserDataService {
     this.saveData();
   }
 
+  public getVibrate(): boolean {
+    return this._userData.vibrate;
+  }
+
+  public setVibriate(flag: boolean) {
+    this._userData.vibrate = flag;
+    this.saveData();
+  }
+
+  public getSound(): boolean {
+    return this._userData.sound;
+  }
+
+  public setSound(flag: boolean) {
+    this._userData.sound = flag;
+    this.saveData();
+  }
+
+  public getBackground(): boolean {
+    return this._userData.background;
+  }
+
+  public setBackground(flag: boolean) {
+    this._userData.background = flag;
+    this.saveData();
+  }
+
   public getLevelHistory(){
     return this._userData.levels;
   }
@@ -94,7 +124,10 @@ export class UserDataService {
       levels: [],
       userMaxLevel: INIT_USER_MAX_LEVLE,
       currentLevel: INIT_CURRENT_MAX_LEVEL,
-      lives: INIT_LIVES
+      lives: INIT_LIVES,
+      vibrate: true,
+      sound: true,
+      background: true
     }
   }
 
@@ -103,6 +136,9 @@ export class UserDataService {
     if(userData){
       let userDataObj = JSON.parse(userData);
       this._userData = (<IUserData>userDataObj);
+      this._userData.vibrate = (this._userData.vibrate === undefined)? true: this._userData.vibrate;
+      this._userData.sound  = (this._userData.sound === undefined)? true: this._userData.sound;
+      this._userData.background = (this._userData.background === undefined)? true: this._userData.background;
     } else {
       this.reset();
     }

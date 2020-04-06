@@ -141,7 +141,10 @@ export class AppComponent implements OnDestroy {
           this.vibrateService.complete();
           this.soundService.complete();
           if(this._gameState === GAME_STATE.COMPLETE){
-            this.setNewLevel(true);
+            setTimeout( () => {
+              this.setNewLevel(true);
+            },1000);
+            
           }        
         }
       } 
@@ -227,6 +230,14 @@ export class AppComponent implements OnDestroy {
     return !this.vibrateService.isEnable();    
   }
 
+  public onBackgroundToggle() {    
+    this.memoryGameManagerService.toggleBackground();
+  }
+
+  public isBackgroundDisabled(){
+    return this.memoryGameManagerService.getBackground();
+  }
+
 
   public getBackgroundColor(): string {
     let gameStateColor = '';
@@ -252,7 +263,7 @@ export class AppComponent implements OnDestroy {
   }
 
   private init(){
-    this.lives = this.memoryGameManagerService.getLives();
+    this.lives = this.memoryGameManagerService.getLives();    
     this.setNewLevel();        
 
   }

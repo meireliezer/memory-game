@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { iOS } from './utils';
+import { UseExistingWebDriver } from 'protractor/built/driverProviders';
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +13,9 @@ export class SoundService {
   private _volume: number;
 
 
-  constructor() { 
+  constructor(private userDataService: UserDataService) { 
     // browsers limit the number of concurrent audio contexts, so you better re-use'em    
-    this._enabled = localStorage.getItem('sound') !== "0";
+    this._enabled = this.userDataService.getSound();
     if(iOS()){
       this._enabled = false;
     }
@@ -69,7 +71,7 @@ export class SoundService {
 
   public toggleSound(){
     this._enabled = !this._enabled;
-    localStorage.setItem('sound', this._enabled? "1": "0");
+    this.userDataService.setSound(this._enabled);    
   }
 
 

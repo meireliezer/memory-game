@@ -12,6 +12,7 @@ export class MemoryGameManagerService {
   private _currentLevel;
   private _userMaxLevel;
   private _lives;
+  private _background;
   
   
   constructor(private userDataService: UserDataService) {
@@ -31,6 +32,14 @@ export class MemoryGameManagerService {
 
   public getLives() {
     return  this._lives;
+  }
+
+  public getBackground(): boolean{
+    return this._background;
+  }
+  public toggleBackground() {
+    this._background = !this._background;
+    this.userDataService.setBackground(this._background);
   }
 
 
@@ -99,5 +108,6 @@ export class MemoryGameManagerService {
     this._lives = this.userDataService.getLives();
     this._currentLevel = this.userDataService.getCurrentLevel();
     this._userMaxLevel = this.userDataService.getUserMaxLevel();
+    this._background =  this.userDataService.getBackground();
   }
 }

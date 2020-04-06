@@ -2,7 +2,7 @@
     <div class="card__internal"        
         (click)="onClick()">
         <div class="card__internal-content"
-            [style.backgroundColor]="(isActive()? data.data.color: '')"
+            [style.backgroundColor]="((isActive() && !disableBackground)? data.data.color: '')"
         >
             <div class="card__internal--symbol" [innerHTML]="(isActive()? data.data.symbol: '')">                    
             </div>

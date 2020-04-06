@@ -5,18 +5,17 @@
   <div class="header__section level">Level<div class="value">{{level}}</div></div>
   <div class="header__section score"> Score <div class="value">{{totalScore}}</div></div>
   <div class="header__section current_score">Timer <div class="value">{{current}}</div></div>
-  <div class="header__section timer">Time<div class="value">{{timer}} sec</div></div>
+  <div class="header__section timer">Timer<div class="value">{{timer}} sec</div></div>
   <div class="header__section lives">&#x2764;<div class="value">{{lives}}</div></div>
 </header>
 <main >    
-
 
   <ng-container *ngFor="let data of getData(); index as idx ">  
     <app-card class="app-card" 
               [data]="data"
               [ngStyle]="getCardLevelDimension()"
               [cardIndex] = "idx"
-
+              [disableBackground]="isBackgroundDisabled()"
               (cardClicked)=onCardClicked($event)
               >
     </app-card>
@@ -34,6 +33,7 @@
   <div class="action--center">
     <div class="action"  *ngIf="(gameState === 0)"   (click)="onRun()" title="Run">&#9658;</div> <!-- play -->
     <div class="action"  *ngIf="(gameState !== 0 )"  (click)="onRun()" title="Refresh">&#8635;</div> <!-- refresh -->
+    <div class="action"  [ngClass]="{crossed:isBackgroundDisabled()}" (click)="onBackgroundToggle()" title="disabel/enable background">bg</div>
     <div class="action"  [hidden]="isIOS" [ngClass]="{crossed:isSoundDisabled()}" (click)="toggleSound() "title="Sound">&#x266B;</div>
     <div class="action"  [hidden]="isIOS" [ngClass]="{crossed:isVibrateDisabled()}" (click)="toggleVibrate()" title="Vibrate">&#x21AD;</div>   
   </div>

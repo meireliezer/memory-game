@@ -20,6 +20,9 @@ export class CardComponent implements OnInit {
 
   @Input()
   public cardIndex;
+
+  @Input()
+  public disableBackground;
   
   private _isClick = false;
   private _backgroundColor = '';

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {iOS} from "./utils";
+import { UserDataService } from './user-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +9,8 @@ export class VibrateService {
 
   private _enabled: boolean;
 
-  constructor() {
-    this._enabled = localStorage.getItem('vibrate') !== "0";
+  constructor(private userDataService: UserDataService) {
+    this._enabled = this.userDataService.getVibrate();
     if(iOS()){
       this._enabled = false;
     }
@@ -39,7 +40,8 @@ export class VibrateService {
 
   public toggleSound(){
     this._enabled = !this._enabled;
-    localStorage.setItem('vibrate', this._enabled? "1": "0");
+    this.userDataService.setVibriate(this._enabled)
+    
   }
 
   private vibrate( arg ){
