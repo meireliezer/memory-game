@@ -92,44 +92,16 @@ export class AppComponent implements OnDestroy {
                 };
     return style;
   }
-
-  public currentClass(){
-    
-    let currentClass = '';
-
-    switch(this._gameState){
-      case GAME_STATE.COMPLETE:
-          currentClass = 'complete';
-          break;
-      case GAME_STATE.FAILED:
-        currentClass = 'failed';
-        break;
-      case GAME_STATE.FAILED_COMPLETE:
-        currentClass = 'failed--complete';
-        break;
-      default:
-        if(this.current < 10) {
-          currentClass = 'warnning';      
-        }
-        break;
-    }
-        
-    return  currentClass;
-  }
-
+ 
   public getData(){
     return this._levelMetadata.data;
   }
-  
 
   private i = true;
 
   // reduce lifes
   public onCardClicked(cardClicked:ICardClicked){
     
-
-
-
     if( this._gameState === GAME_STATE.INIT  ){
       this.onRun();
     }
@@ -152,7 +124,7 @@ export class AppComponent implements OnDestroy {
           }
         });
         this._firstCardClicked = null;        
-        this.vibrateService.pairMatch();
+        //this.vibrateService.pairMatch();
         
 
         // ---------------------------------------------
@@ -170,9 +142,7 @@ export class AppComponent implements OnDestroy {
           this.soundService.complete();
           if(this._gameState === GAME_STATE.COMPLETE){
             this.setNewLevel(true);
-          }
-          
-
+          }        
         }
       } 
       // Diffrent cards
@@ -258,6 +228,28 @@ export class AppComponent implements OnDestroy {
   }
 
 
+  public getBackgroundColor(): string {
+    let gameStateColor = '';
+
+    if(this.current < this._levelMetadata.time * 0.75){
+      gameStateColor = 'game-warning';
+    }
+    if(this.current < this._levelMetadata.time * 0.50){
+      gameStateColor = 'game-alert';
+    }
+    if(this.current === 0){
+      gameStateColor = 'game-failed';
+    }
+
+    if(this._gameState === GAME_STATE.COMPLETE){
+      gameStateColor = '';
+    }
+    
+    // 'game-warning'
+    // 'game-alert'
+    // 'game-failed'
+     return gameStateColor;
+  }
 
   private init(){
     this.lives = this.memoryGameManagerService.getLives();

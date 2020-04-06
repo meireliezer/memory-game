@@ -2,6 +2,7 @@ header {
     display: flex;
     justify-content: space-between;
     background-color: #{var(--clr-primary)};
+    transition: background-color linear 1000ms ;
 
     .header__section  {                                
         width: 25%;
@@ -19,25 +20,17 @@ header {
 
     .heart {
         color: red;
-    }
-
-    .current_score {
-        transition: all ease-in-out 500ms;
-
-        &.complete {
-            background-color: green;
-        }
-        &.warnning {
-            background-color: yellow;
-        }
-        &.failed {
-            background-color: red;
-        }
-        &.failed--complete {
-            background-color: red;
-            outline: 5px solid green;
-            outline-offset: -5px;
-        }
-    }
+    }   
 }
 
+.game-warning {
+    background-color: rgb(238, 238, 9);   
+}
+
+.game-alert {
+    background-color: rgb(255, 68, 0);
+}
+
+.game-failed {
+    background-color: rgb(255, 0, 0);
+}
