@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 
 
+export interface ICardData {
+  color: string;
+  symbol:string;
+}
+
 export interface IPair {
   id: number;
-  data: any;
+  data: ICardData;
 }
 
 
@@ -13,28 +18,31 @@ export interface IPair {
 export class MemoryDataService {
 
   
-  private _colorList = [
-    '#000000',
+  private _dataList: Array<ICardData> = [  
+    {color:  '#000000', symbol: '&#9728;'},
 
-    '#000080',
-    '#008000',
-    '#800000',
+    {color:  '#000080', symbol: '&#9730;'},
+    {color:  '#008000', symbol: '&#9734;'},
+    {color:  '#800000', symbol: '&#9742;'},
 
-    '#000FFF',
-    '#00FF00',
-    '#FF0000',
 
-    
-    '#ff00ff',
-    '#ffff00',    
-    '#00ffff',
+    {color:  '#000FFF', symbol: '&#9762;'},
+    {color:  '#00FF00', symbol: '&#9774;'},
+    {color:  '#FF0000', symbol: '&#9775;'},
 
-    '#ff6600',
-    '#0091ff',
-    '#ff0088'
+
+    {color:  '#FF00FF', symbol: '&#9786;'},
+    {color:  '#FFFF00', symbol: '&#9788;'},
+    {color:  '#00FFFF', symbol: '&#9819;'},
+
+    {color:  '#FF6600', symbol: '&#9832;'},
+    {color:  '#009191', symbol: '&#9851;'},
+    {color:  '#FF0088', symbol: '&#9863;'},  
   ];
 
-  
+
+
+
 
 
   constructor() {
@@ -42,13 +50,13 @@ export class MemoryDataService {
 
 
   public getRandomPairs(num: number): Array<IPair>{
-    let randomColors = this.randomize(this._colorList);
-    randomColors.length = num;
+    let randomData = this.randomize(this._dataList);
+    randomData.length = num;
     
     let pairs = [];
-    randomColors.map((color, index) => {
-      pairs.push({id:index, data: color});
-      pairs.push({id:index, data: color});
+    randomData.map((data, index) => {
+      pairs.push({id:index, data: data});
+      pairs.push({id:index, data: data});
     });
     let randomPairs = this.randomize(pairs);
     

@@ -30,19 +30,6 @@ main{
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    transition: background-color linear 1000ms ;
-
 }
 
 
-.game-warning {
-    background-color: rgb(238, 238, 9);   
-}
-
-.game-alert {
-    background-color: rgb(255, 68, 0);
-}
-
-.game-failed {
-    background-color: rgb(255, 0, 0);
-}

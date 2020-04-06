@@ -13,7 +13,7 @@ export interface ICardClicked {
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent implements OnInit {
-
+  symbol = '&#9728';
 
   @Input()
   public data: IPair;
