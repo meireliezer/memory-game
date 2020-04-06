@@ -19,7 +19,7 @@ export class MemoryDataService {
 
   
   private _dataList: Array<ICardData> = [  
-    {color:  '#111111', symbol: '&#9728;'},
+    {color:  '#222222', symbol: '&#9728;'},
 
     {color:  '#000080', symbol: '&#9730;'},
     {color:  '#008000', symbol: '&#9734;'},

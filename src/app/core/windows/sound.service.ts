@@ -19,7 +19,7 @@ export class SoundService {
     if(iOS()){
       this._enabled = false;
     }
-    this._volume = 1;
+    this._volume = 5;
 
   }
 

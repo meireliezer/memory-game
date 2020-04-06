@@ -235,7 +235,7 @@ export class AppComponent implements OnDestroy {
   }
 
   public isBackgroundDisabled(){
-    return this.memoryGameManagerService.getBackground();
+    return !this.memoryGameManagerService.getBackground();
   }
 
 
