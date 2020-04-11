@@ -23,7 +23,7 @@ export class OpenningScreenComponent implements OnInit {
 
 
   public go(game: number){
-    //this.fullscreenService.requestFullscreen();  
+    this.fullscreenService.requestFullscreen();  
     this.display =  false;
     this.memoryGameManagerService.setGame(<GAME>game);
 

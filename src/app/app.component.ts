@@ -43,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _showTimer: any;
   private _showTimerIntervalHandler:any;
   private _gameChanged$: Observable<GAME>;
+  private _disaplyShowTimerHandlerTimeout;
 
 
 
@@ -114,7 +115,17 @@ export class AppComponent implements OnInit, OnDestroy {
     return this._levelMetadata.data;
   }
 
-  private i = true;
+  
+
+
+  public home(){
+    clearInterval(this._intervalHandler);
+    this._intervalHandler = null;
+    clearTimeout(this._disaplyShowTimerHandlerTimeout);
+    this._disaplyShowTimerHandlerTimeout = null;    
+    this.clearShowTimer();
+  
+  }
 
   // reduce lifes
   public onCardClicked(cardClicked:ICardClicked){
@@ -173,7 +184,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this._cardComponents.forEach( cardComponent => {
             if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
               cardComponent.reset();
-            }
+            }            
           });
           this._firstCardClicked = null;  
           if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
@@ -181,7 +192,7 @@ export class AppComponent implements OnInit, OnDestroy {
             this._showTimer = 'Try Again';
             this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
             clearInterval(this._intervalHandler);
-            
+            this.changeLives(-1);            
           }
           
            
@@ -297,6 +308,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   //next:  true-next level, false, prev level, undefine refresh current level
+  
   private setNewLevel(next?: boolean){
 
     if(next ===  true){
@@ -316,40 +328,41 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
 
-    setTimeout(()=> {
+   
       if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
-        clearInterval(this._showTimerIntervalHandler);
-        this._showTimer = 10;      
-        
-        this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
-        this.discoverAll();
-        
-        this._showTimerIntervalHandler = setInterval( () => {
-          --this._showTimer;
-          if(this._showTimer === 0){
-            this.clearShowTimer();
-          }
-        },1000)
+        this._disaplyShowTimerHandlerTimeout = setTimeout(()=> {
+          clearInterval(this._showTimerIntervalHandler);
+          this._showTimer = 10;      
+          
+          this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
+          this.discoverAll();
+          
+          this._showTimerIntervalHandler = setInterval( () => {
+            --this._showTimer;
+            if(this._showTimer === 0){
+              this.clearShowTimer();
+            }
+          },1000)  
+      },0);
   
-      }
-  
-    },0);
+    }
 
   
   }
 
   private clearShowTimer(){
     clearInterval(this._showTimerIntervalHandler);
+    this._showTimerIntervalHandler = null;
     this.renderer2.removeClass(this._screen.nativeElement, 'screen--display');
     this.hideAll();
   }
 
-  private changeLives(lives: number) {
-    this.lives += lives;
+  private changeLives(deltaLives: number) {
+    this.lives += deltaLives;
     if(this.lives < 0 ){
       this.lives = 0;
     }
-    this.memoryGameManagerService.changeLive(lives);
+    this.memoryGameManagerService.changeLive(deltaLives);
   }
 
   private isFailedStatus(){

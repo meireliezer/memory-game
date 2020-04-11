@@ -34,3 +34,51 @@ header {
 .game-failed {
     background-color: rgb(255, 0, 0);
 }
+
+.header__section_menu{
+    width: 2em;
+    height: 100%;
+    background-color: var(--clr-primary);
+    border: 1px solid black;
+    border-radius: 5px;    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.548);
+    }
+    .menu {
+        --menu-height: 3px;
+        --menu-color: black;
+        position: relative;        
+        background-color: var(--menu-color);
+        height: var(--menu-height);
+        width: 80%;
+        
+        
+
+        &::before {
+            content: '';
+            position: absolute;
+            background-color: var(--menu-color);
+            height: var(--menu-height);
+            width: 100%;
+            top: -0.5em;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            background-color: var(--menu-color);
+            height: var(--menu-height);
+            width: 100%;
+            top: 0.5em;
+        }
+
+
+    }
+
+}
+
