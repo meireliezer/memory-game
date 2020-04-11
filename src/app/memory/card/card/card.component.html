@@ -2,9 +2,9 @@
     <div class="card__internal"        
         (click)="onClick()">
         <div class="card__internal-content"
-            [style.backgroundColor]="((isActive() && !disableBackground)? data.data.color: '')"         
+            [style.backgroundColor]="displayBackground()"         
     >
-            <div class="card__internal--symbol" [innerHTML]="(isActive()? data.data.symbol: '')">                    
+            <div class="card__internal--symbol" [innerHTML]="dispaySymbol()">                    
             </div>
             
         </div>        

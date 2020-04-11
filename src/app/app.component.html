@@ -1,4 +1,4 @@
- <app-openning-screen></app-openning-screen>
+ <!--<app-openning-screen></app-openning-screen>-->
 
 
 <header class="header" [ngClass]="getBackgroundColor()">
@@ -8,8 +8,8 @@
   <!--<div class="header__section timer">Stopper<div class="value">{{timer}} sec</div></div> -->
   <div class="header__section lives">&#x2764;<div class="value">{{lives}}</div></div>
 </header>
-<main >    
 
+<main >    
   <ng-container *ngFor="let data of getData(); index as idx ">  
     <app-card class="app-card" 
               [data]="data"
@@ -19,11 +19,9 @@
               (cardClicked)=onCardClicked($event)
               >
     </app-card>
-  </ng-container>
-  
-
-  
+  </ng-container>  
 </main>
+
 <footer class="actions">
   <div class="action" 
       [ngClass]="{disabled: (level === 1)}"

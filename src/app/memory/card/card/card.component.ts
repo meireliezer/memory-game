@@ -6,15 +6,23 @@ export interface ICardClicked {
   data: IPair;
 }
 
+export interface ICardComponent{
+    pair():void;    
+    reset():void;
+    discover():void;
+    hide():void;
+}
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
 })
-export class CardComponent implements OnInit {
-  symbol = '&#9728';
-
+export class CardComponent implements ICardComponent, OnInit {  
+  
+  
+  
+  
   @Input()
   public data: IPair;
 
@@ -23,25 +31,46 @@ export class CardComponent implements OnInit {
 
   @Input()
   public disableBackground;
-  
-  private _isClick = false;
-  private _backgroundColor = '';
-  private _isPair = false;
-
 
   @Output()
   cardClicked = new EventEmitter();
 
+  private _isClick = false;
+  private _discover: boolean;
 
-  constructor(private elmRef: ElementRef,
-              private render: Renderer2) { }
+
+  constructor(private elmRef: ElementRef) { }
+ 
 
   ngOnInit() {
-    this._backgroundColor = this.elmRef.nativeElement;
+    this._discover = true;
   }
 
   public isActive(){
     return this._isClick;
+  }
+
+  public isDiscover(){
+    return this._discover;
+  }
+
+  public dispaySymbol(){
+    if(this.isActive() || this.isDiscover()){
+      return this.data.data.symbol;
+    }
+    return '';
+  }
+
+  public displayBackground(){
+    if( this.disableBackground === true){
+      return '';
+    }
+
+    if(this.isActive() || this.isDiscover()) {
+      return this.data.data.color;
+    }
+
+    return '';
   }
 
   // "You touch you go"
@@ -52,15 +81,21 @@ export class CardComponent implements OnInit {
     }
   }
 
+  // -----------------------------------------
   // API
-  public pair(){
-    this._isPair = true;
+  // -----------------------------------------
+  public pair(){    
   }
 
   public reset() {
     this._isClick = false;
   }
 
-
+  discover(): void {
+    this._discover = true;
+  }
+  hide(): void {
+    this._discover = false;
+  }
 
 }

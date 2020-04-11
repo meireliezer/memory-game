@@ -40,6 +40,8 @@ export class AppComponent implements OnDestroy {
   private _levelMetadata: ILevelMetadata;
   private _gameState: GAME_STATE;
   private _intervalHandler: any;
+  private _
+
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
@@ -287,6 +289,8 @@ export class AppComponent implements OnDestroy {
       clearInterval(this._intervalHandler);
       this._intervalHandler = null;
     }
+
+    
   }
 
   private changeLives(lives: number) {
