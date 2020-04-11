@@ -30,11 +30,19 @@ const INIT_LIVES = 5;
 export class UserDataService {
 
   private _userData:IUserData;
+  private _game: any;
+  private _userDataKey: string;
 
   constructor() {    
+    this._userDataKey = `userData_${this._game}`;
     this.loadData();
   }
 
+  public setGame(game: any){
+    this._game = game;
+    this._userDataKey = `userData_${this._game}`
+    this.loadData();
+  }
 
   public getUserData(){
     return {...this};
@@ -132,7 +140,7 @@ export class UserDataService {
   }
 
   private loadData() {
-    let userData = localStorage.getItem('userData');
+    let userData = localStorage.getItem(this._userDataKey);
     if(userData){
       let userDataObj = JSON.parse(userData);
       this._userData = (<IUserData>userDataObj);
@@ -146,9 +154,7 @@ export class UserDataService {
 
   private saveData(){
     let data = JSON.stringify(this._userData);
-    localStorage.setItem('userData', data);
+    localStorage.setItem(this._userDataKey, data);
   }
-
-
 
 }

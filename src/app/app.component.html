@@ -1,4 +1,4 @@
- <!--<app-openning-screen></app-openning-screen>-->
+<app-openning-screen></app-openning-screen>
  
 
 
@@ -11,7 +11,10 @@
 </header>
 
 <main>    
-  <div class="screen" #screen><div class="screen__show-timer">{{showTimer}}</div></div>
+  <div class="screen" #screen>
+      <div class="screen__title">MEMORIES</div>
+      <div class="screen__timer">{{showTimer}}</div>
+  </div>
   <ng-container *ngFor="let data of getData(); index as idx ">  
     <app-card class="app-card" 
               [data]="data"

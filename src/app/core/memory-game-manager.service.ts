@@ -1,22 +1,49 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 import { GAME_METADATA } from './game-metadata.const'
 import { UserDataService } from './windows/user-data.service';
+import { EventEmitter } from 'events';
+import { Subject, Observable } from 'rxjs';
 
+export enum GAME {
+  REGULAR,
+  REVERSE,
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemoryGameManagerService {
-
+  
+  
+  
+  
   private _currentLevel;
   private _userMaxLevel;
   private _lives;
   private _background;
-  
-  
+  private _game:GAME;
+  private _gameChanged = new Subject<GAME>();
+    
   constructor(private userDataService: UserDataService) {
+    this._game = GAME.REGULAR;
     this.initFromUserData(); 
+  }
+
+
+  public setGame(game:GAME){
+    this._game = game;
+    this.userDataService.setGame(game);
+    this.initFromUserData(); 
+    this._gameChanged.next(this._game);
+  }
+
+  public getGame(): GAME {
+    return this._game;
+  }
+
+  public get gameChanged$(): Observable<GAME>{
+    return this._gameChanged.asObservable();
   }
 
   public getCurrentLevel(){

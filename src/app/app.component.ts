@@ -1,5 +1,5 @@
 import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef} from '@angular/core';
-import { MemoryGameManagerService} from './core/memory-game-manager.service';
+import { MemoryGameManagerService, GAME} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
 import { ICardClicked, CardComponent, ICardComponent } from './memory/card/card/card.component';
@@ -7,8 +7,7 @@ import { SoundService } from './core/windows/sound.service';
 import { VibrateService } from './core/windows/vibrate.service';
 import { FullScreenService } from './core/windows/full-screen.service';
 import { iOS } from './core/windows/utils';
-
-
+import { Observable } from 'rxjs';
 
 enum GAME_STATE {
   INIT,
@@ -17,12 +16,6 @@ enum GAME_STATE {
   FAILED,
   FAILED_COMPLETE
 }
-
-enum GAME {
-    REGULAR,
-    REVERSE,
-}
-
 
 @Component({
   selector: 'app-root',
@@ -46,10 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
   private _totalPairs: number;
   private _levelMetadata: ILevelMetadata;
   private _gameState: GAME_STATE;
-  private _intervalHandler: any;
-  private _game: GAME;
+  private _intervalHandler: any;  
   private _showTimer: any;
   private _showTimerIntervalHandler:any;
+  private _gameChanged$: Observable<GAME>;
 
 
 
@@ -64,10 +57,14 @@ export class AppComponent implements OnInit, OnDestroy {
            
                 
   }
-  ngOnInit(): void {
-    this._game = GAME.REVERSE;
+  ngOnInit(): void {        
     this.init();
     this.isIOS = iOS();
+
+    this._gameChanged$ = this.memoryGameManagerService.gameChanged$;
+    this._gameChanged$.subscribe( (game:GAME) => {
+      this.init();
+    });
   }
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
@@ -179,7 +176,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           });
           this._firstCardClicked = null;  
-          if(this._game == GAME.REVERSE){
+          if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
             this.discoverAll();
             this._showTimer = 'Try Again';
             this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
@@ -318,7 +315,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     setTimeout(()=> {
-      if(this._game === GAME.REVERSE){
+      if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
         clearInterval(this._showTimerIntervalHandler);
         this._showTimer = 10;      
         
