@@ -43,7 +43,7 @@ export class CardComponent implements ICardComponent, OnInit {
  
 
   ngOnInit() {
-    this._discover = true;
+    this._discover = false;
   }
 
   public isActive(){

@@ -1,8 +1,8 @@
-import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy} from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef} from '@angular/core';
 import { MemoryGameManagerService} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
-import { ICardClicked, CardComponent } from './memory/card/card/card.component';
+import { ICardClicked, CardComponent, ICardComponent } from './memory/card/card/card.component';
 import { SoundService } from './core/windows/sound.service';
 import { VibrateService } from './core/windows/vibrate.service';
 import { FullScreenService } from './core/windows/full-screen.service';
@@ -18,13 +18,18 @@ enum GAME_STATE {
   FAILED_COMPLETE
 }
 
+enum GAME {
+    REGULAR,
+    REVERSE,
+}
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
 
   public timer: number;
   public current: number;
@@ -34,26 +39,35 @@ export class AppComponent implements OnDestroy {
   @ViewChildren(CardComponent)
   _cardComponents: QueryList<CardComponent>;
   
+  @ViewChild('screen', {static:true, read:ElementRef})
+  _screen: ElementRef;
 
   private _firstCardClicked: ICardClicked;
   private _totalPairs: number;
   private _levelMetadata: ILevelMetadata;
   private _gameState: GAME_STATE;
   private _intervalHandler: any;
-  private _
+  private _game: GAME;
+  private _showTimer: any;
+  private _showTimerIntervalHandler:any;
+
 
 
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
               private soundService: SoundService,
               private vibrateService: VibrateService,
-              private fullscreenService: FullScreenService) {
+              private fullscreenService: FullScreenService,
+              private renderer2 : Renderer2) {
     
-              this.init();
-              this.isIOS = iOS();
-
+          
            
                 
+  }
+  ngOnInit(): void {
+    this._game = GAME.REVERSE;
+    this.init();
+    this.isIOS = iOS();
   }
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
@@ -73,6 +87,10 @@ export class AppComponent implements OnDestroy {
 
   public get totalScore() {
     return this.memoryGameManagerService.getTotalScore()
+  }
+
+  public get showTimer(){
+    return this._showTimer;
   }
 
   public onNextLevel() {    
@@ -161,6 +179,14 @@ export class AppComponent implements OnDestroy {
             }
           });
           this._firstCardClicked = null;  
+          if(this._game == GAME.REVERSE){
+            this.discoverAll();
+            this._showTimer = 'Try Again';
+            this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
+            clearInterval(this._intervalHandler);
+            
+          }
+          
            
         }, 250);
       }  
@@ -290,7 +316,29 @@ export class AppComponent implements OnDestroy {
       this._intervalHandler = null;
     }
 
-    
+
+    setTimeout(()=> {
+      if(this._game === GAME.REVERSE){
+        clearInterval(this._showTimerIntervalHandler);
+        this._showTimer = 10;      
+        
+        this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
+        this.discoverAll();
+        
+        this._showTimerIntervalHandler = setInterval( () => {
+          --this._showTimer;
+          if(this._showTimer === 0){
+            clearInterval(this._showTimerIntervalHandler);
+            this.renderer2.removeClass(this._screen.nativeElement, 'screen--display');
+            this.hideAll();
+          }
+        },1000)
+  
+      }
+  
+    },0);
+
+  
   }
 
   private changeLives(lives: number) {
@@ -309,5 +357,18 @@ export class AppComponent implements OnDestroy {
     return (this._totalPairs === (this._levelMetadata.cards/2));
   }
 
-  
+
+
+  private discoverAll(){
+    this._cardComponents.forEach(card => {
+      card.discover();
+    });
+
+  }
+
+  private hideAll() {
+    this._cardComponents.forEach(card => {
+      card.hide();
+    });
+  }
 }
