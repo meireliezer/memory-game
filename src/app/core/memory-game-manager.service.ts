@@ -1,7 +1,6 @@
 import { Injectable, Output } from '@angular/core';
 import { GAME_METADATA } from './game-metadata.const'
 import { UserDataService } from './windows/user-data.service';
-import { EventEmitter } from 'events';
 import { Subject, Observable } from 'rxjs';
 
 export enum GAME {

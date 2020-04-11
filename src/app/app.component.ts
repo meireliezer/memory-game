@@ -199,6 +199,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.setNewLevel();
       return;
     }
+
+    this.clearShowTimer();
     
     this._gameState = GAME_STATE.RUN;
     this._intervalHandler = setInterval(()=>{
@@ -325,9 +327,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this._showTimerIntervalHandler = setInterval( () => {
           --this._showTimer;
           if(this._showTimer === 0){
-            clearInterval(this._showTimerIntervalHandler);
-            this.renderer2.removeClass(this._screen.nativeElement, 'screen--display');
-            this.hideAll();
+            this.clearShowTimer();
           }
         },1000)
   
@@ -336,6 +336,12 @@ export class AppComponent implements OnInit, OnDestroy {
     },0);
 
   
+  }
+
+  private clearShowTimer(){
+    clearInterval(this._showTimerIntervalHandler);
+    this.renderer2.removeClass(this._screen.nativeElement, 'screen--display');
+    this.hideAll();
   }
 
   private changeLives(lives: number) {
