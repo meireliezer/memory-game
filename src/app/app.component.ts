@@ -332,7 +332,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
         this._disaplyShowTimerHandlerTimeout = setTimeout(()=> {
           clearInterval(this._showTimerIntervalHandler);
-          this._showTimer = 10;      
+          this._showTimer = this._levelMetadata.showTimer;      
           
           this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
           this.discoverAll();

@@ -17,7 +17,7 @@ export interface ILevelMetadata {
     score: 4 * 2,
     width: '50%',
     height: '50%',
-    showTimer: 5
+    showTimer: 6
   },
   {
     level: 2,
@@ -80,7 +80,7 @@ export interface ILevelMetadata {
     score: 18 * 2,
     width: '25%',
     height: '20%',
-    showTimer: 45
+    showTimer: 60
   },
   {
     level: 9,
