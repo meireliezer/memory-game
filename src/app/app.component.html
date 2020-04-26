@@ -32,26 +32,3 @@
   </ng-container>  
 </main>
 
-<footer class="actions">
-  <div class="action" 
-      [ngClass]="{disabled: (level === 1)}"
-      (click)="onPrevLevel()"
-      title="Back"
-      >&larr;</div>
-  <div class="action--center">
-    <div class="action"  *ngIf="(gameState === 0)"   (click)="onRun()" title="Run">&#9658;</div> <!-- play -->
-    <div class="action"  *ngIf="(gameState !== 0 )"  (click)="onRun()" title="Refresh">&#8635;</div> <!-- refresh -->
-    <div class="action"  [ngClass]="{crossed:isBackgroundDisabled()}" (click)="onBackgroundToggle()" title="disabel/enable background">bg</div>
-    <div class="action"  [hidden]="isIOS" [ngClass]="{crossed:isSoundDisabled()}" (click)="toggleSound() "title="Sound">&#x266B;</div>
-    <div class="action"  [hidden]="isIOS" [ngClass]="{crossed:isVibrateDisabled()}" (click)="toggleVibrate()" title="Vibrate">&#x21AD;</div>   
-  </div>
-  <div *ngIf="(lives === 0)" 
-        class="action" 
-        (click)="onReset()"
-        title="Reset">&#8676;</div>
-  <div class="action" 
-      [ngClass]="{disabled: (level === userMaxLevel)}"
-      (click)="onNextLevel()"
-      title="Next"
-   >&rarr;</div> 
-</footer>

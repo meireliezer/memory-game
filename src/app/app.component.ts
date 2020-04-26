@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef, ViewContainerRef, ComponentFactoryResolver, Injector} from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef, ViewContainerRef, ComponentFactoryResolver, Injector, Type} from '@angular/core';
 import { MemoryGameManagerService, GAME} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
@@ -12,6 +12,7 @@ import { LevelFailedComponent } from './main/level-failed/level-failed.component
 import { OpenningScreenService } from './openning-screen/openning-screen.service';
 import { GameOverComponent } from './main/game-over/game-over.component';
 import { GameCompleteComponent } from './main/game-complete/game-complete.component';
+import { IMainTopScreenComponent } from './main/main-top-level.interface';
 
 enum GAME_STATE {
   INIT,
@@ -38,6 +39,10 @@ export class AppComponent implements OnInit, OnDestroy {
   
   @ViewChild('screen', {static:true, read:ElementRef})
   _screen: ElementRef;
+
+  @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
+  mainTopScreen: ViewContainerRef;
+ 
 
   private _firstCardClicked: ICardClicked;
   private _totalPairs: number;
@@ -180,7 +185,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.soundService.complete();
 
           if(this.level === this.memoryGameManagerService.getEndLevel()){
-            this.displayMainTopScreenGameCompelte();
+            this.displayMainTopComponent(GameCompleteComponent);
             return;
           }
 
@@ -414,13 +419,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
 
-  @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
-  mainTopScreen: ViewContainerRef;
-  private displayMainTopScreenLevelFailed(){     
-    let componentFactory = this.cfr.resolveComponentFactory(LevelFailedComponent);
-    let component = componentFactory.create(this.injector);
-    component.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
-    let subscription = component.instance.output.subscribe( action => {
+ 
+  private displayMainTopComponent<T>(comp:Type<T>){
+    let componentFactory = this.cfr.resolveComponentFactory(comp);
+    let component = componentFactory.create(this.injector)  ;
+    let componentInstace = <IMainTopScreenComponent><unknown>(component.instance);
+    componentInstace.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    let subscription = componentInstace.output.subscribe( action => {
       console.log(action);
       subscription.unsubscribe();
       this.mainTopScreen.remove();
@@ -439,68 +444,18 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
     this.mainTopScreen.insert(component.hostView);
+
   }
-
-  private displayMainTopScreenGameOver(){     
-    let componentFactory = this.cfr.resolveComponentFactory(GameOverComponent);
-    let component = componentFactory.create(this.injector)
-    component.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
-    let subscription = component.instance.output.subscribe( action => {
-      console.log(action);
-      subscription.unsubscribe();
-      this.mainTopScreen.remove();
-      switch(action.action){
-        case 'RETRY':
-          this.onRun();
-        break;      
-      case 'CONTINUE':
-        break;
-      case 'RESTART':
-          this.onReset();
-        break;
-       case 'HOME':
-         this.home();
-         break;
-      }
-    });
-    this.mainTopScreen.insert(component.hostView);
-  }
-
-
-  private displayMainTopScreenGameCompelte(){     
-    let componentFactory = this.cfr.resolveComponentFactory(GameCompleteComponent);
-    let component = componentFactory.create(this.injector)    
-    let subscription = component.instance.output.subscribe( action => {
-      console.log(action);
-      subscription.unsubscribe();
-      this.mainTopScreen.remove();
-      switch(action.action){
-        case 'RETRY':
-          this.onRun();
-        break;      
-      case 'CONTINUE':
-        break;
-      case 'RESTART':
-          this.onReset();
-        break;
-       case 'HOME':
-         this.home();
-         break;
-      }
-    });
-    this.mainTopScreen.insert(component.hostView);
-  }
-
 
 
     private displayMainTopScreen(){
       if(this.lives === 0){
-        this.displayMainTopScreenGameOver();
+        this.displayMainTopComponent(GameOverComponent);
         return;
       } 
 
       if( (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.FAILED) ) {
-        this.displayMainTopScreenLevelFailed();
+        this.displayMainTopComponent(LevelFailedComponent);
       }
       
 
