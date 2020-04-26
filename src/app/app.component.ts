@@ -71,6 +71,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this._gameChanged$.subscribe( (game:GAME) => {
       this.init();
     });
+
+
+    this.openningScreenService.hide();
+    this.displayMainTopScreenLevelFailed();
   }
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();

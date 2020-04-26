@@ -24,7 +24,7 @@
 
         .title {            
             font-size: 3rem;         
-            text-align: center;
+            text-align: center;        
         }
 
         .game-actions{            
@@ -51,5 +51,17 @@
     }
 }
 
+@media (min-width: 1200px){
+    .main-page {
+        &-content{
+            max-width: 1000px;
+            align-items: center;           
 
+            .game-actions {
+               
+
+            }
+        }
+    }
+}
 
