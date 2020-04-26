@@ -7,12 +7,14 @@ import { CardComponent } from './memory/card/card/card.component';
 import { OpenningScreenComponent } from './openning-screen/openning-screen.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CardComponent,
-    OpenningScreenComponent
+    OpenningScreenComponent,
+    LevelFailedComponent
   ],
   imports: [
     BrowserModule,
@@ -20,6 +22,8 @@ import { environment } from '../environments/environment';
   //  AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[LevelFailedComponent]
+
 })
 export class AppModule { }

@@ -11,7 +11,7 @@ import { MemoryGameManagerService , GAME} from '../core/memory-game-manager.serv
 })
 export class OpenningScreenComponent implements OnInit {
 
-  public display =  true;
+  public display =  false;
 
   constructor(private fullscreenService:FullScreenService,
               private memoryGameManagerService: MemoryGameManagerService) {

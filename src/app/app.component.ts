@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit , OnDestroy, OnInit, Renderer2, ViewChild, ElementRef, ViewContainerRef, ComponentFactoryResolver, Injector} from '@angular/core';
 import { MemoryGameManagerService, GAME} from './core/memory-game-manager.service';
 import { ILevelMetadata} from './core/game-metadata.const'
 import { MemoryDataService } from './core/memory-data.service';
@@ -8,6 +8,7 @@ import { VibrateService } from './core/windows/vibrate.service';
 import { FullScreenService } from './core/windows/full-screen.service';
 import { iOS } from './core/windows/utils';
 import { Observable } from 'rxjs';
+import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 
 enum GAME_STATE {
   INIT,
@@ -52,7 +53,9 @@ export class AppComponent implements OnInit, OnDestroy {
               private soundService: SoundService,
               private vibrateService: VibrateService,
               private fullscreenService: FullScreenService,
-              private renderer2 : Renderer2) {
+              private renderer2 : Renderer2,
+              private cfr: ComponentFactoryResolver,
+              private injector:Injector) {
     
           
            
@@ -124,6 +127,8 @@ export class AppComponent implements OnInit, OnDestroy {
     clearTimeout(this._disaplyShowTimerHandlerTimeout);
     this._disaplyShowTimerHandlerTimeout = null;    
     this.clearShowTimer();
+
+    
   
   }
 
@@ -164,6 +169,8 @@ export class AppComponent implements OnInit, OnDestroy {
           this._intervalHandler = null;
           // Game Complete state
           this._gameState = (this.current > 0) ?GAME_STATE.COMPLETE : GAME_STATE.FAILED_COMPLETE;
+
+
           // Store data
           this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);            
           this.vibrateService.complete();
@@ -173,7 +180,9 @@ export class AppComponent implements OnInit, OnDestroy {
               this.setNewLevel(true);
             },1000);
             
-          }        
+          } else {
+            this.displayMainTopScreenLevelFailed();
+          }
         }
       } 
       // Diffrent cards
@@ -227,16 +236,16 @@ export class AppComponent implements OnInit, OnDestroy {
       if(this.current === 0){
         if(this.isComplete()){
           this._gameState = GAME_STATE.FAILED_COMPLETE;
+          this.displayMainTopScreenLevelFailed();
         } else {
           // Reduce lives
           if(this._gameState !== GAME_STATE.FAILED){
+            this.displayMainTopScreenLevelFailed();
             this.soundService.failed();
             // Only if it is  user max level            
             if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
-              this.changeLives(-1);
-            
-            }
-            
+              this.changeLives(-1);            
+            }            
           }
           this._gameState = GAME_STATE.FAILED;
          
@@ -387,4 +396,33 @@ export class AppComponent implements OnInit, OnDestroy {
       card.hide();
     });
   }
+
+
+  @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
+  mainTopScreen: ViewContainerRef;
+  private displayMainTopScreenLevelFailed(){     
+    let levelFailedComponentFactory = this.cfr.resolveComponentFactory(LevelFailedComponent);
+    let levelFailedComponent = levelFailedComponentFactory.create(this.injector);
+    levelFailedComponent.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    let subscription = levelFailedComponent.instance.output.subscribe( action => {
+      console.log(action);
+      subscription.unsubscribe();
+      this.mainTopScreen.remove();
+      switch(action.action){
+        case 'RETRY':
+          this.onRun();
+        break;      
+      case 'CONTINUE':
+        break;
+      case 'RESTART':
+          this.onReset();
+        break;
+       case 'HOME':
+         this.home();
+         break;
+      }
+    });
+    this.mainTopScreen.insert(levelFailedComponent.hostView);
+  }
+
 }
