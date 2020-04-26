@@ -9,6 +9,7 @@ import { FullScreenService } from './core/windows/full-screen.service';
 import { iOS } from './core/windows/utils';
 import { Observable } from 'rxjs';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
+import { OpenningScreenService } from './openning-screen/openning-screen.service';
 
 enum GAME_STATE {
   INIT,
@@ -55,7 +56,8 @@ export class AppComponent implements OnInit, OnDestroy {
               private fullscreenService: FullScreenService,
               private renderer2 : Renderer2,
               private cfr: ComponentFactoryResolver,
-              private injector:Injector) {
+              private injector:Injector, 
+              private openningScreenService: OpenningScreenService) {
     
           
            
@@ -126,10 +128,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this._intervalHandler = null;
     clearTimeout(this._disaplyShowTimerHandlerTimeout);
     this._disaplyShowTimerHandlerTimeout = null;    
-    this.clearShowTimer();
-
-    
-  
+    this.clearShowTimer();         
+    this.openningScreenService.display();  
   }
 
   // reduce lifes

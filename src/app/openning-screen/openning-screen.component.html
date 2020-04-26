@@ -1,4 +1,4 @@
-<div class="openning-screen" *ngIf="display">
+<div class="openning-screen" *ngIf="openningScreenService.display$ | async">
 
     <div class="os-title">Memory Match</div>
     <div class="os-cards">

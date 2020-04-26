@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FullScreenService } from '../core/windows/full-screen.service';
 import { MemoryGameManagerService , GAME} from '../core/memory-game-manager.service';
+import { OpenningScreenService } from './openning-screen.service';
 
 
 
@@ -10,11 +11,10 @@ import { MemoryGameManagerService , GAME} from '../core/memory-game-manager.serv
   styleUrls: ['./openning-screen.component.scss']
 })
 export class OpenningScreenComponent implements OnInit {
-
-  public display =  false;
-
+  
   constructor(private fullscreenService:FullScreenService,
-              private memoryGameManagerService: MemoryGameManagerService) {
+              private memoryGameManagerService: MemoryGameManagerService, 
+              public openningScreenService: OpenningScreenService) {
                 
    }
 
@@ -23,9 +23,10 @@ export class OpenningScreenComponent implements OnInit {
 
 
   public go(game: number){
-    this.fullscreenService.requestFullscreen();  
-    this.display =  false;
+    this.openningScreenService.hide();
+    this.fullscreenService.requestFullscreen();     
     this.memoryGameManagerService.setGame(<GAME>game);
+    
 
   }
 
