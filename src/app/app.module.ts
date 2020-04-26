@@ -9,6 +9,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 import { GameOverComponent } from './main/game-over/game-over.component';
+import { GameCompleteComponent } from './main/game-complete/game-complete.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { GameOverComponent } from './main/game-over/game-over.component';
     CardComponent,
     OpenningScreenComponent,
     LevelFailedComponent,
-    GameOverComponent
+    GameOverComponent,
+    GameCompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +27,11 @@ import { GameOverComponent } from './main/game-over/game-over.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents:[LevelFailedComponent, GameOverComponent]
+  entryComponents:[
+    LevelFailedComponent,
+    GameOverComponent,
+    GameCompleteComponent
+  ]
 
 })
 export class AppModule { }

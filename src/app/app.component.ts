@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 import { OpenningScreenService } from './openning-screen/openning-screen.service';
 import { GameOverComponent } from './main/game-over/game-over.component';
-import { IMainTopScreenComponent } from './main/main-top-level.interface';
+import { GameCompleteComponent } from './main/game-complete/game-complete.component';
 
 enum GAME_STATE {
   INIT,
@@ -73,8 +73,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this._gameChanged$.subscribe( (game:GAME) => {
       this.init();
     });
-
-
 
   }
   ngOnDestroy(): void {
@@ -180,6 +178,13 @@ export class AppComponent implements OnInit, OnDestroy {
           this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);            
           this.vibrateService.complete();
           this.soundService.complete();
+
+          if(this.level === this.memoryGameManagerService.getEndLevel()){
+            this.displayMainTopScreenGameCompelte();
+            return;
+          }
+
+
           if(this._gameState === GAME_STATE.COMPLETE){
             setTimeout( () => {
               this.setNewLevel(true);
@@ -239,12 +244,13 @@ export class AppComponent implements OnInit, OnDestroy {
       } 
       // Failed
       if(this.current === 0){
+        clearInterval(this._intervalHandler);
         if(this.isComplete()){
           this._gameState = GAME_STATE.FAILED_COMPLETE;          
         } else {
           // Reduce lives
           if(this._gameState !== GAME_STATE.FAILED){
-            this.displayMainTopScreen();
+           
             this.soundService.failed();
             // Only if it is  user max level            
             if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
@@ -252,7 +258,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }            
           }
           this._gameState = GAME_STATE.FAILED;
-         
+          this.displayMainTopScreen();
           
         }
       }        
@@ -379,7 +385,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     if(this.lives === 0){
-      this.displayMainTopScreenGameOver();
+      this.displayMainTopScreen();
     }
     
   }
@@ -411,10 +417,10 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
   mainTopScreen: ViewContainerRef;
   private displayMainTopScreenLevelFailed(){     
-    let levelFailedComponentFactory = this.cfr.resolveComponentFactory(LevelFailedComponent);
-    let levelFailedComponent = levelFailedComponentFactory.create(this.injector);
-    levelFailedComponent.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
-    let subscription = levelFailedComponent.instance.output.subscribe( action => {
+    let componentFactory = this.cfr.resolveComponentFactory(LevelFailedComponent);
+    let component = componentFactory.create(this.injector);
+    component.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    let subscription = component.instance.output.subscribe( action => {
       console.log(action);
       subscription.unsubscribe();
       this.mainTopScreen.remove();
@@ -432,14 +438,14 @@ export class AppComponent implements OnInit, OnDestroy {
          break;
       }
     });
-    this.mainTopScreen.insert(levelFailedComponent.hostView);
+    this.mainTopScreen.insert(component.hostView);
   }
 
   private displayMainTopScreenGameOver(){     
-    let levelFailedComponentFactory = this.cfr.resolveComponentFactory(GameOverComponent);
-    let levelFailedComponent = levelFailedComponentFactory.create(this.injector)
-    levelFailedComponent.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
-    let subscription = levelFailedComponent.instance.output.subscribe( action => {
+    let componentFactory = this.cfr.resolveComponentFactory(GameOverComponent);
+    let component = componentFactory.create(this.injector)
+    component.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    let subscription = component.instance.output.subscribe( action => {
       console.log(action);
       subscription.unsubscribe();
       this.mainTopScreen.remove();
@@ -457,8 +463,34 @@ export class AppComponent implements OnInit, OnDestroy {
          break;
       }
     });
-    this.mainTopScreen.insert(levelFailedComponent.hostView);
+    this.mainTopScreen.insert(component.hostView);
   }
+
+
+  private displayMainTopScreenGameCompelte(){     
+    let componentFactory = this.cfr.resolveComponentFactory(GameCompleteComponent);
+    let component = componentFactory.create(this.injector)    
+    let subscription = component.instance.output.subscribe( action => {
+      console.log(action);
+      subscription.unsubscribe();
+      this.mainTopScreen.remove();
+      switch(action.action){
+        case 'RETRY':
+          this.onRun();
+        break;      
+      case 'CONTINUE':
+        break;
+      case 'RESTART':
+          this.onReset();
+        break;
+       case 'HOME':
+         this.home();
+         break;
+      }
+    });
+    this.mainTopScreen.insert(component.hostView);
+  }
+
 
 
     private displayMainTopScreen(){
