@@ -13,6 +13,7 @@ import { OpenningScreenService } from './openning-screen/openning-screen.service
 import { GameOverComponent } from './main/game-over/game-over.component';
 import { GameCompleteComponent } from './main/game-complete/game-complete.component';
 import { IMainTopScreenComponent } from './main/main-top-level.interface';
+import { CountDownComponent } from './main/count-down/count-down.component';
 
 enum GAME_STATE {
   INIT,
@@ -37,8 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChildren(CardComponent)
   _cardComponents: QueryList<CardComponent>;
   
-  @ViewChild('screen', {static:true, read:ElementRef})
-  _screen: ElementRef;
+
 
   @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
   mainTopScreen: ViewContainerRef;
@@ -50,7 +50,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private _gameState: GAME_STATE;
   private _intervalHandler: any;  
   private _showTimer: any;
-  private _showTimerIntervalHandler:any;
   private _gameChanged$: Observable<GAME>;
   private _disaplyShowTimerHandlerTimeout;
 
@@ -60,8 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
               private memoryDataService: MemoryDataService,
               private soundService: SoundService,
               private vibrateService: VibrateService,
-              private fullscreenService: FullScreenService,
-              private renderer2 : Renderer2,
+              private fullscreenService: FullScreenService,              
               private cfr: ComponentFactoryResolver,
               private injector:Injector, 
               private openningScreenService: OpenningScreenService) {
@@ -78,6 +76,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this._gameChanged$.subscribe( (game:GAME) => {
       this.init();
     });
+
+ 
+
 
   }
   ngOnDestroy(): void {
@@ -185,7 +186,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.soundService.complete();
 
           if(this.level === this.memoryGameManagerService.getEndLevel()){
-            this.displayMainTopComponent(GameCompleteComponent);
+            this.displayMainTopComponent(GameCompleteComponent, null);
             return;
           }
 
@@ -213,10 +214,9 @@ export class AppComponent implements OnInit, OnDestroy {
           this._firstCardClicked = null;  
           if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
             this.discoverAll();
-            this._showTimer = 'Try Again';
-            this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
             clearInterval(this._intervalHandler);
             this.changeLives(-1);            
+            this.displayMainTopScreen();
           }
           
            
@@ -354,19 +354,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
    
       if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
-        this._disaplyShowTimerHandlerTimeout = setTimeout(()=> {
-          clearInterval(this._showTimerIntervalHandler);
+        this._disaplyShowTimerHandlerTimeout = setTimeout(()=> {          
           this._showTimer = this._levelMetadata.showTimer;      
           
-          this.renderer2.addClass(this._screen.nativeElement, 'screen--display');
-          this.discoverAll();
-          
-          this._showTimerIntervalHandler = setInterval( () => {
-            --this._showTimer;
-            if(this._showTimer === 0){
-              this.clearShowTimer();
-            }
-          },1000)  
+          this.displayMainTopComponent(CountDownComponent, this._levelMetadata.showTimer);
+          this.discoverAll();                   
       },0);
   
     }
@@ -374,10 +366,7 @@ export class AppComponent implements OnInit, OnDestroy {
   
   }
 
-  private clearShowTimer(){
-    clearInterval(this._showTimerIntervalHandler);
-    this._showTimerIntervalHandler = null;
-    this.renderer2.removeClass(this._screen.nativeElement, 'screen--display');
+  private clearShowTimer(){    
     this.hideAll();
   }
 
@@ -420,11 +409,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
  
-  private displayMainTopComponent<T>(comp:Type<T>){
+  private displayMainTopComponent<T>(comp:Type<T>, data:any){
     let componentFactory = this.cfr.resolveComponentFactory(comp);
     let component = componentFactory.create(this.injector)  ;
     let componentInstace = <IMainTopScreenComponent><unknown>(component.instance);
-    componentInstace.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    componentInstace.data = data;
     let subscription = componentInstace.output.subscribe( action => {
       console.log(action);
       subscription.unsubscribe();
@@ -441,6 +430,12 @@ export class AppComponent implements OnInit, OnDestroy {
        case 'HOME':
          this.home();
          break;
+        case 'REVERSE_RUN':
+          this.hideAll();
+          this.onRun();
+
+        break;
+
       }
     });
     this.mainTopScreen.insert(component.hostView);
@@ -449,13 +444,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     private displayMainTopScreen(){
+      let canContinue = !this.isComplete();
+
       if(this.lives === 0){
-        this.displayMainTopComponent(GameOverComponent);
+        this.displayMainTopComponent(GameOverComponent, canContinue);
         return;
       } 
 
       if( (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.FAILED) ) {
-        this.displayMainTopComponent(LevelFailedComponent);
+        this.displayMainTopComponent(LevelFailedComponent, canContinue);
       }
       
 

@@ -4,7 +4,7 @@
         <div class="title">Game Over</div>
         <div class="game-actions">
             <div class="game-action" (click)="retry()">Try Again</div>
-            <div class="game-action" (click)="continue()" *ngIf="displayContinue">Continue (just for fun)</div>            
+            <div class="game-action" (click)="continue()" *ngIf="data">Continue (just for fun)</div>            
             <div class="game-action" (click)="restart()">Restart</div>
             <div class="game-action" (click)="home()">Home</div>                
         </div>    

@@ -13,13 +13,8 @@
 
 
 <main>    
-  <ng-container #mainTopScreen>
-  </ng-container>
+  <ng-container #mainTopScreen></ng-container>
   
-  <div class="screen" #screen (click)="onRun()">
-      <div class="screen__title">MEMORIZE</div>
-      <div class="screen__timer">{{showTimer}}</div>
-  </div>
   <ng-container *ngFor="let data of getData(); index as idx ">  
     <app-card class="app-card" 
               [data]="data"

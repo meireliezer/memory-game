@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 import { GameOverComponent } from './main/game-over/game-over.component';
 import { GameCompleteComponent } from './main/game-complete/game-complete.component';
+import { CountDownComponent } from './main/count-down/count-down.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { GameCompleteComponent } from './main/game-complete/game-complete.compon
     OpenningScreenComponent,
     LevelFailedComponent,
     GameOverComponent,
-    GameCompleteComponent
+    GameCompleteComponent,
+    CountDownComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,8 @@ import { GameCompleteComponent } from './main/game-complete/game-complete.compon
   entryComponents:[
     LevelFailedComponent,
     GameOverComponent,
-    GameCompleteComponent
+    GameCompleteComponent,
+    CountDownComponent
   ]
 
 })

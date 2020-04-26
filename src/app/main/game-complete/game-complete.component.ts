@@ -1,11 +1,12 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { IMainTopScreenComponent } from '../main-top-level.interface';
 
 @Component({
   selector: 'app-game-complete',
   templateUrl: './game-complete.component.html',
   styleUrls: ['./game-complete.component.scss']
 })
-export class GameCompleteComponent  {
+export class GameCompleteComponent implements IMainTopScreenComponent   {
 
 
   @Output()

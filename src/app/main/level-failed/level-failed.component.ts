@@ -12,13 +12,13 @@ export class LevelFailedComponent implements IMainTopScreenComponent {
 
   
   @Input()
-  public displayContinue: boolean;
+  public data: any;
 
   @Output()
   public output = new EventEmitter();
 
   constructor() {  
-    this.displayContinue =  true;   
+    this.data =  true;   
   }
 
 
