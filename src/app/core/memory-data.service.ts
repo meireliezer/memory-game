@@ -21,23 +21,23 @@ export class MemoryDataService {
   private _dataList: Array<ICardData> = [  
     {color:  '#222222', symbol: '&#9728;'},
 
-    {color:  '#000080', symbol: '&#9730;'},
-    {color:  '#008000', symbol: '&#9734;'},
-    {color:  '#800000', symbol: '&#9742;'},
+    {color:  '#FF0000', symbol: '&#9730;'},
+    {color:  '#ff9933', symbol: '&#9734;'},
+    {color:  '#FFFF00', symbol: '&#9742;'},
 
 
-    {color:  '#000FFF', symbol: '&#9762;'},
-    {color:  '#00FF00', symbol: '&#9774;'},
-    {color:  '#FF0000', symbol: '&#9775;'},
+    {color:  '#33ff33', symbol: '&#9762;'},
+    {color:  '#009800', symbol: '&#9774;'},
+    {color:  '#33ffff', symbol: '&#9775;'},
 
 
-    {color:  '#FF00FF', symbol: '&#9786;'},
-    {color:  '#FFFF00', symbol: '&#9788;'},
-    {color:  '#00FFFF', symbol: '&#9819;'},
+    {color:  '#1292ff', symbol: '&#9786;'},
+    {color:  '#0000FF', symbol: '&#9788;'},
+    {color:  '#9933ff', symbol: '&#9819;'},
 
-    {color:  '#FF6600', symbol: '&#9832;'},
-    {color:  '#009191', symbol: '&#9851;'},
-    {color:  '#FF0088', symbol: '&#9863;'},  
+    {color:  '#ff00ff', symbol: '&#9832;'},
+    {color:  '#ff3366', symbol: '&#9851;'},
+    {color:  '#fceabf', symbol: '&#9863;'},  
   ];
 
 
