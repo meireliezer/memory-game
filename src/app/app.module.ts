@@ -8,13 +8,15 @@ import { OpenningScreenComponent } from './openning-screen/openning-screen.compo
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
+import { GameOverComponent } from './main/game-over/game-over.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CardComponent,
     OpenningScreenComponent,
-    LevelFailedComponent
+    LevelFailedComponent,
+    GameOverComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,7 @@ import { LevelFailedComponent } from './main/level-failed/level-failed.component
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents:[LevelFailedComponent]
+  entryComponents:[LevelFailedComponent, GameOverComponent]
 
 })
 export class AppModule { }

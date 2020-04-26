@@ -1,16 +1,14 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
-import { IMainTopScreenComponent } from '../main-top-level.interface';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-level-failed',
-  templateUrl: './level-failed.component.html',
-  styleUrls: ['./level-failed.component.scss']
+  selector: 'app-game-over',
+  templateUrl: './game-over.component.html',
+  styleUrls: ['./game-over.component.scss']
 })
-export class LevelFailedComponent implements IMainTopScreenComponent {
+export class GameOverComponent  {
 
 
 
-  
   @Input()
   public displayContinue: boolean;
 

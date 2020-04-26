@@ -10,6 +10,8 @@ import { iOS } from './core/windows/utils';
 import { Observable } from 'rxjs';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 import { OpenningScreenService } from './openning-screen/openning-screen.service';
+import { GameOverComponent } from './main/game-over/game-over.component';
+import { IMainTopScreenComponent } from './main/main-top-level.interface';
 
 enum GAME_STATE {
   INIT,
@@ -73,8 +75,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
 
-    this.openningScreenService.hide();
-    this.displayMainTopScreenLevelFailed();
+
   }
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
@@ -185,7 +186,7 @@ export class AppComponent implements OnInit, OnDestroy {
             },1000);
             
           } else {
-            this.displayMainTopScreenLevelFailed();
+            this.displayMainTopScreen();
           }
         }
       } 
@@ -239,12 +240,11 @@ export class AppComponent implements OnInit, OnDestroy {
       // Failed
       if(this.current === 0){
         if(this.isComplete()){
-          this._gameState = GAME_STATE.FAILED_COMPLETE;
-          this.displayMainTopScreenLevelFailed();
+          this._gameState = GAME_STATE.FAILED_COMPLETE;          
         } else {
           // Reduce lives
           if(this._gameState !== GAME_STATE.FAILED){
-            this.displayMainTopScreenLevelFailed();
+            this.displayMainTopScreen();
             this.soundService.failed();
             // Only if it is  user max level            
             if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
@@ -373,9 +373,15 @@ export class AppComponent implements OnInit, OnDestroy {
   private changeLives(deltaLives: number) {
     this.lives += deltaLives;
     if(this.lives < 0 ){
-      this.lives = 0;
+      this.lives = 0;     
+    } else {
+      this.memoryGameManagerService.changeLive(deltaLives);
     }
-    this.memoryGameManagerService.changeLive(deltaLives);
+
+    if(this.lives === 0){
+      this.displayMainTopScreenGameOver();
+    }
+    
   }
 
   private isFailedStatus(){
@@ -428,5 +434,45 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.mainTopScreen.insert(levelFailedComponent.hostView);
   }
+
+  private displayMainTopScreenGameOver(){     
+    let levelFailedComponentFactory = this.cfr.resolveComponentFactory(GameOverComponent);
+    let levelFailedComponent = levelFailedComponentFactory.create(this.injector)
+    levelFailedComponent.instance.displayContinue = !(this._gameState === GAME_STATE.COMPLETE || this._gameState === GAME_STATE.FAILED_COMPLETE)
+    let subscription = levelFailedComponent.instance.output.subscribe( action => {
+      console.log(action);
+      subscription.unsubscribe();
+      this.mainTopScreen.remove();
+      switch(action.action){
+        case 'RETRY':
+          this.onRun();
+        break;      
+      case 'CONTINUE':
+        break;
+      case 'RESTART':
+          this.onReset();
+        break;
+       case 'HOME':
+         this.home();
+         break;
+      }
+    });
+    this.mainTopScreen.insert(levelFailedComponent.hostView);
+  }
+
+
+    private displayMainTopScreen(){
+      if(this.lives === 0){
+        this.displayMainTopScreenGameOver();
+        return;
+      } 
+
+      if( (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.FAILED) ) {
+        this.displayMainTopScreenLevelFailed();
+      }
+      
+
+
+    }
 
 }
