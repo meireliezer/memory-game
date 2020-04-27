@@ -38,8 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChildren(CardComponent)
   _cardComponents: QueryList<CardComponent>;
   
-
-
   @ViewChild('mainTopScreen', {read: ViewContainerRef, static:true})
   mainTopScreen: ViewContainerRef;
  
@@ -49,12 +47,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private _levelMetadata: ILevelMetadata;
   private _gameState: GAME_STATE;
   private _intervalHandler: any;  
-  private _showTimer: any;
   private _gameChanged$: Observable<GAME>;
-  private _disaplyShowTimerHandlerTimeout;
-
-
-
+  
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
               private soundService: SoundService,
@@ -62,12 +56,9 @@ export class AppComponent implements OnInit, OnDestroy {
               private fullscreenService: FullScreenService,              
               private cfr: ComponentFactoryResolver,
               private injector:Injector, 
-              private openningScreenService: OpenningScreenService) {
-    
-          
-           
-                
-  }
+              private openningScreenService: OpenningScreenService) {}      
+
+
   ngOnInit(): void {        
     this.init();
     this.isIOS = iOS();
@@ -76,33 +67,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this._gameChanged$.subscribe( (game:GAME) => {
       this.init();
     });
-
- 
-
-
   }
+
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
   }
 
-
   public get level(){
     return this.memoryGameManagerService.getCurrentLevel();
-  }
-  public get userMaxLevel(){
-    return this.memoryGameManagerService.getUserMaxLevel();
-  }
-
-  public get gameState(){
-    return this._gameState;
   }
 
   public get totalScore() {
     return this.memoryGameManagerService.getTotalScore()
-  }
-
-  public get showTimer(){
-    return this._showTimer;
   }
 
   public onNextLevel() {    
@@ -111,10 +87,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public onPrevLevel() {
     this.setNewLevel(false);
-  }
-
-  public getLevelMetadata(){
-    return this._levelMetadata;
   }
 
   public getCardLevelDimension()  {
@@ -130,13 +102,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   
-
-
   public home(){
     clearInterval(this._intervalHandler);
     this._intervalHandler = null;
-    clearTimeout(this._disaplyShowTimerHandlerTimeout);
-    this._disaplyShowTimerHandlerTimeout = null;    
     this.clearShowTimer();         
     this.openningScreenService.display();  
   }
@@ -354,9 +322,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
    
       if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
-        this._disaplyShowTimerHandlerTimeout = setTimeout(()=> {          
-          this._showTimer = this._levelMetadata.showTimer;      
-          
+        setTimeout(()=> {                    
           this.displayMainTopComponent(CountDownComponent, this._levelMetadata.showTimer);
           this.discoverAll();                   
       },0);
