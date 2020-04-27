@@ -78,32 +78,18 @@
 
     &--btn{
         background-color: rgba(240, 255, 240, 0.096);
-        border: 1px solid black;
-        border-radius: 5px;
-        padding: 0.10em 0.30em;
+        border: 1px solid white;
+        border-radius: 5px;        
+        height: 1.5em;
+        width: 1.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
 
         &:hover {
             background-color: rgba(126, 110, 110, 0.685);
         }
-    }
-}
-
-.disabled {
-    pointer-events: none;
-    cursor: initial;
-    background-color: rgba(0, 0, 0, 0.315);
-}
-
-.action--center {
-    display:flex;
-    
-    div {
-        border: 1px solid;
-    }
-
-    div + div {
-        margin-left: 0.2em
     }
 }
 
@@ -117,9 +103,7 @@
     background-color: black;
     height: 2px;    
     width: 100%;
-    transform:  translateX(-25%) 
-                translateY(0.7em)
-                rotate(45deg);
+    transform: rotate(45deg);
     
 }
 
@@ -129,8 +113,6 @@
     background-color: black;
     height: 2px;    
     width: 100%;
-    transform:  translateX(-75%) 
-                translateY(0.7em)
-                rotate(-45deg);
+    transform: rotate(-45deg);
 }
 

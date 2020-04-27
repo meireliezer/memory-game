@@ -10,13 +10,13 @@
             <div class="setting-item">
                 <div class="setting-item--title ">Sound:</div>
                 <div class="setting-item--btn" 
-                        [ngClass]="{'crossed': isSoundDisabled()}"
+                        [ngClass]="{'crossed': (isSoundDisabled() || isIOS), 'disabled': isIOS }"
                         (click)="toggleSound()" >♫</div>
             </div>
             <div class="setting-item">
                 <div class="setting-item--title">Vibration:</div>
                 <div class="setting-item--btn crossed"
-                        [ngClass]="{'crossed': isVibrateDisabled()}"
+                        [ngClass]="{'crossed': (isVibrateDisabled() || isIOS), 'disabled': isIOS }"
                         (click)="toggleVibrate()">↭</div>
             </div>
             <div class="setting-item">

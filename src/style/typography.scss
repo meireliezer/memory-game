@@ -26,4 +26,9 @@ app-root {
     justify-content: space-between;
 }
 
+.disabled {
+    pointer-events: none;
+    cursor: initial;
+    background-color: rgba(0, 0, 0, 0.315);
+}
 

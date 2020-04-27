@@ -3,6 +3,7 @@ import { MenuService } from './menu.service';
 import { SoundService } from '../core/windows/sound.service';
 import { VibrateService } from '../core/windows/vibrate.service';
 import { MemoryGameManagerService } from '../core/memory-game-manager.service';
+import { iOS } from '../core/windows/utils'; 
 
 @Component({
   selector: 'app-menu',
@@ -12,7 +13,7 @@ import { MemoryGameManagerService } from '../core/memory-game-manager.service';
 export class MenuComponent implements OnInit {
 
   public isOpen = false;
-
+  public isIOS: boolean;
 
 
   constructor(public menuService: MenuService,
@@ -22,7 +23,8 @@ export class MenuComponent implements OnInit {
 
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {    
+    this.isIOS = iOS();
     this.menuService.open$.subscribe( open => {
       this.isOpen = open;
     })
