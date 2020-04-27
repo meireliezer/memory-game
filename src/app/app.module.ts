@@ -11,6 +11,7 @@ import { LevelFailedComponent } from './main/level-failed/level-failed.component
 import { GameOverComponent } from './main/game-over/game-over.component';
 import { GameCompleteComponent } from './main/game-complete/game-complete.component';
 import { CountDownComponent } from './main/count-down/count-down.component';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CountDownComponent } from './main/count-down/count-down.component';
     LevelFailedComponent,
     GameOverComponent,
     GameCompleteComponent,
-    CountDownComponent
+    CountDownComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,

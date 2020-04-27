@@ -7,13 +7,14 @@ import { SoundService } from './core/windows/sound.service';
 import { VibrateService } from './core/windows/vibrate.service';
 import { FullScreenService } from './core/windows/full-screen.service';
 import { iOS } from './core/windows/utils';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { LevelFailedComponent } from './main/level-failed/level-failed.component';
 import { OpenningScreenService } from './openning-screen/openning-screen.service';
 import { GameOverComponent } from './main/game-over/game-over.component';
 import { GameCompleteComponent } from './main/game-complete/game-complete.component';
 import { IMainTopScreenComponent } from './main/main-top-level.interface';
 import { CountDownComponent } from './main/count-down/count-down.component';
+import { MenuService } from './menu/menu.service';
 
 enum GAME_STATE {
   INIT,
@@ -49,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _gameState: GAME_STATE;
   private _intervalHandler: any;  
   private _gameChanged$: Observable<GAME>;
+  private _mainTopScreenSubscription: Subscription;
   
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
@@ -57,7 +59,8 @@ export class AppComponent implements OnInit, OnDestroy {
               private fullscreenService: FullScreenService,              
               private cfr: ComponentFactoryResolver,
               private injector:Injector, 
-              private openningScreenService: OpenningScreenService) {}      
+              private openningScreenService: OpenningScreenService, 
+              private menuService: MenuService) {}      
 
 
   ngOnInit(): void {        
@@ -108,9 +111,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   
-  public home(){
+  public home(){    
     this.clearMainInterval();       
-    this.openningScreenService.display();  
+    this.menuService.open();
+
+    //this.openningScreenService.display();  
   }
 
   // reduce lifes
@@ -168,7 +173,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // Change to next level
         setTimeout( () => {
-          this.setLevel(true);
+          this.setLevel(true); // TODO:: check if game finished
         },1000);          
        
       }
@@ -237,7 +242,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if(this.isComplete()){
             this._gameState = GAME_STATE.COMPLETE;
             setTimeout( () => {
-              this.setLevel(true);
+              this.setLevel(true); // TODO:: check if game finished
             },1000);
 
         // Failed
@@ -267,30 +272,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.init();
   }
 
-  public toggleSound(){
-    this.soundService.toggleSound();
-  }
-
-  public isSoundDisabled(){
-    return !this.soundService.isEnable();
-  }
-
-  public toggleVibrate(){
-    this.vibrateService.toggleSound();
-  }
-
-  public isVibrateDisabled(){
-    return !this.vibrateService.isEnable();    
-  }
-
-  public onBackgroundToggle() {    
-    this.memoryGameManagerService.toggleBackground();
-  }
-
-  public isBackgroundDisabled(){
-    return !this.memoryGameManagerService.getBackground();
-  }
-
+ 
 
   public getBackgroundColor(): string {
     let gameStateColor = '';
@@ -361,7 +343,10 @@ export class AppComponent implements OnInit, OnDestroy {
   private isComplete(){
     return (this._totalPairs === (this._levelMetadata.cards/2));
   }
-
+  
+  public isBackgroundDisabled(){
+    return !this.memoryGameManagerService.getBackground();
+  }
 
 
   private discoverAll(){
@@ -389,10 +374,11 @@ export class AppComponent implements OnInit, OnDestroy {
     let component = componentFactory.create(this.injector)  ;
     let componentInstace = <IMainTopScreenComponent><unknown>(component.instance);
     componentInstace.data = data;
-    let subscription = componentInstace.output.subscribe( action => {
+    this._mainTopScreenSubscription = componentInstace.output.subscribe( action => {
       console.log(action);
-      subscription.unsubscribe();
-      this.mainTopScreen.remove();
+     
+      this.removeMainTopScreen();
+
       switch(action.action){
         case 'RETRY':
           this.onRun();
@@ -417,4 +403,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mainTopScreen.insert(component.hostView);
 
   }
+
+  private removeMainTopScreen(){
+    if(this._mainTopScreenSubscription){
+      this._mainTopScreenSubscription.unsubscribe();
+    }    
+    this.mainTopScreen.remove();
+  }
+
 }

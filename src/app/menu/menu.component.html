@@ -1,0 +1,50 @@
+<div class="menu-page" [ngClass]="{'open': isOpen}">
+    <div class="menu-page--content">
+        <div class="menu-page--header">
+            <div class="menu-page--title">Menu</div>
+            <div class="menu-page--close" (click)="onClose()">X</div>
+        </div>
+        <div class="menu-page--settings">
+            <div class="setting--title">Settings:</div>
+
+            <div class="setting-item">
+                <div class="setting-item--title ">Sound:</div>
+                <div class="setting-item--btn" 
+                        [ngClass]="{'crossed': isSoundDisabled()}"
+                        (click)="toggleSound()" >♫</div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-item--title">Vibration:</div>
+                <div class="setting-item--btn crossed"
+                        [ngClass]="{'crossed': isVibrateDisabled()}"
+                        (click)="toggleVibrate()">↭</div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-item--title">Backgound:</div>
+                <div class="setting-item--btn " 
+                        [ngClass]="{'crossed': isBackgroundDisabled()}"
+                        (click)="onBackgroundToggle()">bg</div>
+            </div>
+
+        </div>
+        <div class="menu-page--levels">
+            <div>Results:</div>
+            <div class="mini-card">
+                <div>Level: 1</div>
+                <div>cards: 4</div>
+                <div>score: 4sec</div>
+            </div>
+            <div class="mini-card">
+                <div>Level: 2</div>
+                <div>cards: 6</div>
+                <div>score: 12sec</div>
+            </div>
+            <div class="mini-card">
+                <div>Level: 3</div>
+                <div>cards: 8</div>
+                <div>score: 14sec</div>
+            </div>
+        </div>
+        <div>Home</div>
+    </div>
+</div>
