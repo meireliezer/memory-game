@@ -17,9 +17,10 @@ import { CountDownComponent } from './main/count-down/count-down.component';
 
 enum GAME_STATE {
   INIT,
-  RUN,
+  RUN,  
   COMPLETE,
   FAILED,
+  CONTINUE,
   FAILED_COMPLETE
 }
 
@@ -108,97 +109,107 @@ export class AppComponent implements OnInit, OnDestroy {
 
   
   public home(){
-    clearInterval(this._intervalHandler);
-    this._intervalHandler = null;        
+    this.clearMainInterval();       
     this.openningScreenService.display();  
   }
 
   // reduce lifes
   public onCardClicked(cardClicked:ICardClicked){
     
-    if( this._gameState === GAME_STATE.INIT  ){
+    if( this._gameState === GAME_STATE.INIT){
       this.onRun();
     }
 
     this.soundService.beepCard(cardClicked.data.id);
 
+    // -----------------------------------------
     // First pair Click
+    // -----------------------------------------
     if(!this._firstCardClicked) {
       this._firstCardClicked = cardClicked;
+      return;
     }
+
+    // -----------------------------------------
     // Second pair click
-    else {
-
-      // Same cards
-      if(this._firstCardClicked.data.id === cardClicked.data.id) {
-        ++this._totalPairs;
-        this._cardComponents.forEach( cardComponent => {
-          if(cardComponent.data.id === cardClicked.data.id){
-            cardComponent.pair();
-          }
-        });
-        this._firstCardClicked = null;        
-        //this.vibrateService.pairMatch();
-        
-
-        // ---------------------------------------------
-        // Complete level
-        // ---------------------------------------------
-        if(this.isComplete()){
-          // Stop timer
-          clearInterval(this._intervalHandler);
-          this._intervalHandler = null;
-          // Game Complete state
-          this._gameState = (this.current > 0) ?GAME_STATE.COMPLETE : GAME_STATE.FAILED_COMPLETE;
-
-
-          // Store data
-          this.memoryGameManagerService.completeLevel(this.isFailedStatus(), this.timer, this.current);            
-          this.vibrateService.complete();
-          this.soundService.complete();
-
-          if(this.level === this.memoryGameManagerService.getEndLevel()){
-            this.displayMainTopComponent(GameCompleteComponent, null);
-            return;
-          }
-
-
-          if(this._gameState === GAME_STATE.COMPLETE){
-            setTimeout( () => {
-              this.setLevel(true);
-            },1000);
+    // -----------------------------------------
+    // -----------------------------------------
+    //        Same cards
+    // -----------------------------------------
+    if(this._firstCardClicked.data.id === cardClicked.data.id) {
+      ++this._totalPairs;
+      this._cardComponents.forEach( cardComponent => {
+        if(cardComponent.data.id === cardClicked.data.id){
+          cardComponent.pair();
+        }
+      });
+      this._firstCardClicked = null;        
             
+      // Complete level      
+      if(this.isComplete()){
+        // Stop timer
+        this.clearMainInterval();
+        // Game Complete state
+
+        if(this._gameState === GAME_STATE.CONTINUE){
+          this._gameState = GAME_STATE.FAILED_COMPLETE;
+        } else {
+          this._gameState = GAME_STATE.COMPLETE;
+        }        
+        // Store data
+        this.memoryGameManagerService.completeLevel(this.isFailedStatus(), 0, this.current);            
+        this.vibrateService.complete();
+        this.soundService.complete();
+
+        if(this.level === this.memoryGameManagerService.getEndLevel() &&  (this._gameState === GAME_STATE.COMPLETE) ){
+          this.displayMainTopComponent(GameCompleteComponent, null);
+          return;
+        }
+
+        // Change to next level
+        setTimeout( () => {
+          this.setLevel(true);
+        },1000);          
+       
+      }
+    } 
+
+    // -----------------------------------------
+    // Diffrent cards
+    // -----------------------------------------
+    else {        
+      this.vibrateService.pairMissMatch(); 
+      this.soundService.pairMissMatch();
+   
+
+      setTimeout(()=>{
+        this._cardComponents.forEach( cardComponent => {
+          if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
+            cardComponent.reset();
+          }            
+        });
+        this._firstCardClicked = null;  
+
+        if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
+          this.discoverAll();
+          this.clearMainInterval();
+          this.changeLives(-1);          
+          if(this.lives === 0)  {
+            this.displayMainTopComponent(GameOverComponent, false);
           } else {
-            this.displayMainTopScreen();
+            this.displayMainTopComponent(LevelFailedComponent, false);
           }
         }
-      } 
-      // Diffrent cards
-      else {        
-        this.vibrateService.pairMissMatch(); 
-        this.soundService.pairMissMatch();
-        setTimeout(()=>{
-          this._cardComponents.forEach( cardComponent => {
-            if((cardComponent.data.id === cardClicked.data.id) || (cardComponent.data.id === this._firstCardClicked.data.id) ){
-              cardComponent.reset();
-            }            
-          });
-          this._firstCardClicked = null;  
-          if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
-            this.discoverAll();
-            clearInterval(this._intervalHandler);
-            this.changeLives(-1);            
-            this.displayMainTopScreen();
-          }
+        
           
-           
-        }, 250);
-      }  
-    } 
+      }, 250);
+    }  
   }
 
 
-  // Run Button
+  // --------------------------------------------------------
+  // Run Button (The Timer)
+  // --------------------------------------------------------
   public onRun(){
     
     // Refresh
@@ -210,31 +221,41 @@ export class AppComponent implements OnInit, OnDestroy {
     this._gameState = GAME_STATE.RUN;
     this._intervalHandler = setInterval(()=>{
       
-      // Timer
-      ++this.timer;      
-
       // Score
       if(this.current > 0 ){
         --this.current;
       } 
-      // Failed
+
+      // ----------------------------------------------
+      // Time out
+      // ----------------------------------------------
       if(this.current === 0){
-        clearInterval(this._intervalHandler);
+
+        this.clearMainInterval();
+
+        // Succeed on the second (go to next level)
         if(this.isComplete()){
-          this._gameState = GAME_STATE.FAILED_COMPLETE;          
-        } else {
-          // Reduce lives
-          if(this._gameState !== GAME_STATE.FAILED){
-           
+            this._gameState = GAME_STATE.COMPLETE;
+            setTimeout( () => {
+              this.setLevel(true);
+            },1000);
+
+        // Failed
+        } else {                     
+            this._gameState = GAME_STATE.FAILED;
             this.soundService.failed();
+            
             // Only if it is  user max level            
             if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
               this.changeLives(-1);            
             }            
-          }
-          this._gameState = GAME_STATE.FAILED;
-          this.displayMainTopScreen();
           
+          // Time end (due to time), alow continue till end          
+          if(this.lives === 0){
+            this.displayMainTopComponent(GameOverComponent, true);            
+          }else {
+            this.displayMainTopComponent(LevelFailedComponent, true);          
+          }      
         }
       }        
     }, 1000);
@@ -315,12 +336,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this._levelMetadata.data  =  this.memoryDataService.getRandomPairs(this._levelMetadata.cards/2);
     this._totalPairs = 0;
     this._gameState = GAME_STATE.INIT;
-    this.timer = 0;
     this.current = this._levelMetadata.score;
-    if(this._intervalHandler){
-      clearInterval(this._intervalHandler);
-      this._intervalHandler = null;
-    }
+    this.clearMainInterval();
    
     if(this.memoryGameManagerService.getGame() === GAME.REVERSE){      
         this.displayMainTopComponent(CountDownComponent, this._levelMetadata.showTimer);  
@@ -335,15 +352,10 @@ export class AppComponent implements OnInit, OnDestroy {
     } else {
       this.memoryGameManagerService.changeLive(deltaLives);
     }
-
-    if(this.lives === 0){
-      this.displayMainTopScreen();
-    }
-    
   }
 
   private isFailedStatus(){
-    return (this._gameState === GAME_STATE.FAILED) || (this._gameState === GAME_STATE.FAILED_COMPLETE);
+    return (this._gameState === GAME_STATE.FAILED) || (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.CONTINUE) ;
   }
 
   private isComplete(){
@@ -366,6 +378,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
 
+  private clearMainInterval(){
+    clearInterval(this._intervalHandler);
+    this._intervalHandler = null;
+  }
+
  
   private displayMainTopComponent<T>(comp:Type<T>, data:any){
     let componentFactory = this.cfr.resolveComponentFactory(comp);
@@ -381,6 +398,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.onRun();
         break;      
       case 'CONTINUE':
+        this._gameState = GAME_STATE.CONTINUE;
         break;
       case 'RESTART':
           this.onReset();
@@ -399,19 +417,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.mainTopScreen.insert(component.hostView);
 
   }
-
-
-    private displayMainTopScreen(){
-      let canContinue = !this.isComplete();
-
-      if(this.lives === 0){
-        this.displayMainTopComponent(GameOverComponent, canContinue);
-        return;
-      } 
-
-      if( (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.FAILED) ) {
-        this.displayMainTopComponent(LevelFailedComponent, canContinue);
-      }
-    }
-
 }

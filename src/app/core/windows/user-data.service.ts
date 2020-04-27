@@ -22,7 +22,7 @@ const PRODUCTION_VERSION = 1;
 
 const INIT_USER_MAX_LEVLE = 1
 const INIT_CURRENT_MAX_LEVEL = 1
-const INIT_LIVES = 5;
+const INIT_LIVES = 2;
 
 @Injectable({
   providedIn: 'root'
