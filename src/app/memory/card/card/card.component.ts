@@ -32,18 +32,23 @@ export class CardComponent implements ICardComponent, OnInit {
   @Input()
   public disableBackground;
 
+  @Input('discover')
+  public  _discover: boolean;
+
   @Output()
   cardClicked = new EventEmitter();
 
   private _isClick = false;
-  private _discover: boolean;
+  
 
 
-  constructor(private elmRef: ElementRef) { }
+  constructor(private elmRef: ElementRef) {
+      this._discover = false;
+   }
  
 
   ngOnInit() {
-    this._discover = false;
+    
   }
 
   public isActive(){

@@ -21,6 +21,7 @@
               [ngStyle]="getCardLevelDimension()"
               [cardIndex] = "idx"
               [disableBackground]="isBackgroundDisabled()"
+              [discover]="isDiscoverCardOnInit()"
               (cardClicked)=onCardClicked($event)
               >
     </app-card>

@@ -81,12 +81,17 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.memoryGameManagerService.getTotalScore()
   }
 
+
+  public isDiscoverCardOnInit(){
+    return (this.memoryGameManagerService.getGame() === GAME.REVERSE)
+  }
+
   public onNextLevel() {    
-    this.setNewLevel(true);
+    this.setLevel(true);
   }
 
   public onPrevLevel() {
-    this.setNewLevel(false);
+    this.setLevel(false);
   }
 
   public getCardLevelDimension()  {
@@ -161,7 +166,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
           if(this._gameState === GAME_STATE.COMPLETE){
             setTimeout( () => {
-              this.setNewLevel(true);
+              this.setLevel(true);
             },1000);
             
           } else {
@@ -199,7 +204,7 @@ export class AppComponent implements OnInit, OnDestroy {
     
     // Refresh
     if( this._gameState !== GAME_STATE.INIT  ){
-      this.setNewLevel();
+      this.setLevel();
       return;
     }
 
@@ -294,14 +299,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private init(){
     this.lives = this.memoryGameManagerService.getLives();    
-    this.setNewLevel();        
+    this.setLevel();        
 
   }
 
 
-  //next:  true-next level, false, prev level, undefine refresh current level
-  
-  private setNewLevel(next?: boolean){
+  //next:  true-next level, 
+  //       false-prev level,
+  //       undefine refresh current level
+  private setLevel(next?: boolean){
 
     if(next ===  true){
       this.memoryGameManagerService.nextLevel();
@@ -318,18 +324,10 @@ export class AppComponent implements OnInit, OnDestroy {
       clearInterval(this._intervalHandler);
       this._intervalHandler = null;
     }
-
-
    
-      if(this.memoryGameManagerService.getGame() === GAME.REVERSE){
-        setTimeout(()=> {                    
-          this.displayMainTopComponent(CountDownComponent, this._levelMetadata.showTimer);
-          this.discoverAll();                   
-      },0);
-  
+    if(this.memoryGameManagerService.getGame() === GAME.REVERSE){      
+        this.displayMainTopComponent(CountDownComponent, this._levelMetadata.showTimer);  
     }
-
-  
   }
 
   private clearShowTimer(){    
