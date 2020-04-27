@@ -1,4 +1,4 @@
-<div class="menu-page" [ngClass]="{'open': isOpen}">
+<div class="menu-page" [ngClass]="{'open': (menuService.open$|async)}">
     <div class="menu-page--content">
         <div class="menu-page--header">
             <div class="menu-page--title">Menu</div>

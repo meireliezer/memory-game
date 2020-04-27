@@ -15,7 +15,7 @@
 
 
 
-<main>    
+<main [ngClass]="{'disabled': (menuService.open$ | async)} ">    
   <ng-container #mainTopScreen></ng-container>
   
   <ng-container *ngFor="let data of getData(); index as idx ">  

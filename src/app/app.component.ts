@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _intervalHandler: any;  
   private _gameChanged$: Observable<GAME>;
   private _mainTopScreenSubscription: Subscription;
-  
+    
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
               private soundService: SoundService,
@@ -110,7 +110,11 @@ export class AppComponent implements OnInit, OnDestroy {
     return this._levelMetadata.data;
   }
 
-  
+  public isMainDisabled() {
+
+  }
+
+
   public home(){    
     this.clearMainInterval();       
     this.menuService.open();
@@ -343,7 +347,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private isComplete(){
     return (this._totalPairs === (this._levelMetadata.cards/2));
   }
-  
+
   public isBackgroundDisabled(){
     return !this.memoryGameManagerService.getBackground();
   }

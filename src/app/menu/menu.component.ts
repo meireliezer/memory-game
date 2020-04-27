@@ -12,7 +12,7 @@ import { iOS } from '../core/windows/utils';
 })
 export class MenuComponent implements OnInit {
 
-  public isOpen = false;
+
   public isIOS: boolean;
 
 
@@ -25,9 +25,6 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {    
     this.isIOS = iOS();
-    this.menuService.open$.subscribe( open => {
-      this.isOpen = open;
-    })
   }
 
 
