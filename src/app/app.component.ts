@@ -109,8 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
   
   public home(){
     clearInterval(this._intervalHandler);
-    this._intervalHandler = null;
-    this.clearShowTimer();         
+    this._intervalHandler = null;        
     this.openningScreenService.display();  
   }
 
@@ -207,9 +206,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.setLevel();
       return;
     }
-
-    this.clearShowTimer();
-    
+  
     this._gameState = GAME_STATE.RUN;
     this._intervalHandler = setInterval(()=>{
       
@@ -330,9 +327,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  private clearShowTimer(){    
-    this.hideAll();
-  }
 
   private changeLives(deltaLives: number) {
     this.lives += deltaLives;
@@ -418,9 +412,6 @@ export class AppComponent implements OnInit, OnDestroy {
       if( (this._gameState === GAME_STATE.FAILED_COMPLETE) || (this._gameState === GAME_STATE.FAILED) ) {
         this.displayMainTopComponent(LevelFailedComponent, canContinue);
       }
-      
-
-
     }
 
 }
