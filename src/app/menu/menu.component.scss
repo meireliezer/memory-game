@@ -153,6 +153,16 @@
     background-color: grey;
 }
 
+
+@media (max-width:450px){
+    .mini-cards { 
+    }
+
+    .mini-card--paris {
+        display: none;
+    }
+}
+
 .menu-btn {
     display: inline-block;
     padding: 0.3em 0.9em;
