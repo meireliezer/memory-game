@@ -1,7 +1,7 @@
 import { Injectable, Output } from '@angular/core';
 import { GAME_METADATA } from './game-metadata.const'
 import { UserDataService, ILevelData } from './windows/user-data.service';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 
 export enum GAME {
   REGULAR,
@@ -14,15 +14,13 @@ export enum GAME {
 })
 export class MemoryGameManagerService {
   
-  
-  
-  
   private _currentLevel;
   private _userMaxLevel;
   private _lives;
   private _background;
   private _game:GAME;
   private _gameChanged = new Subject<GAME>();
+  private _levelChanged = new Subject();
     
   constructor(private userDataService: UserDataService) {
     this._game = GAME.REGULAR;
@@ -43,6 +41,10 @@ export class MemoryGameManagerService {
 
   public get gameChanged$(): Observable<GAME>{
     return this._gameChanged.asObservable();
+  }
+
+  public get levelChanged$(): Observable<any> {
+    return this._levelChanged.asObservable();
   }
 
   public getCurrentLevel(){
@@ -106,22 +108,25 @@ export class MemoryGameManagerService {
       return this._currentLevel;
     }
 
-    ++this._currentLevel;
-    this.userDataService.setCurrentLevel(this._currentLevel);
+    this.setLevel(this._currentLevel + 1);
     if(this._userMaxLevel < this._currentLevel){
       this._userMaxLevel = this._currentLevel;
       this.userDataService.setUserMaxLevel(this._userMaxLevel);
     }
-
     return this._currentLevel;
   }
 
   public prevLevel(){
     if(this._currentLevel > 1){
-      --this._currentLevel;
-      this.userDataService.setCurrentLevel(this._currentLevel);
-    }
+      this.setLevel(this._currentLevel - 1);
+    }    
     return this._currentLevel;
+  }
+
+  public setLevel(level: number){
+    this._currentLevel = level;
+    this.userDataService.setCurrentLevel(this._currentLevel);
+    this._levelChanged.next(this._currentLevel);
   }
 
   public completeLevel(failed:boolean, time: number, score: number){

@@ -4,6 +4,7 @@ import { SoundService } from '../core/windows/sound.service';
 import { VibrateService } from '../core/windows/vibrate.service';
 import { MemoryGameManagerService } from '../core/memory-game-manager.service';
 import { iOS } from '../core/windows/utils'; 
+import { ILevelData } from '../core/windows/user-data.service';
 
 @Component({
   selector: 'app-menu',
@@ -58,6 +59,12 @@ export class MenuComponent implements OnInit {
 
   public onClose(){
     this.menuService.close();
+  }
+
+  public onSelectLevel(level: ILevelData){
+    this.memoryGameManagerService.setLevel(level.level);
+    this.menuService.close();
+    
   }
 
 

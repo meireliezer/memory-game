@@ -49,8 +49,10 @@ export class AppComponent implements OnInit, OnDestroy {
   private _levelMetadata: ILevelMetadata;
   private _gameState: GAME_STATE;
   private _intervalHandler: any;  
-  private _gameChanged$: Observable<GAME>;
+  private _gameChangedSubscription: Subscription;
   private _mainTopScreenSubscription: Subscription;
+  private _levelSubscrption: Subscription;
+
     
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
               private memoryDataService: MemoryDataService,
@@ -67,14 +69,21 @@ export class AppComponent implements OnInit, OnDestroy {
     this.init();
     this.isIOS = iOS();
 
-    this._gameChanged$ = this.memoryGameManagerService.gameChanged$;
-    this._gameChanged$.subscribe( (game:GAME) => {
+    
+    this._gameChangedSubscription =this.memoryGameManagerService.gameChanged$.subscribe( (game:GAME) => {
       this.init();
+    });
+
+  
+    this._levelSubscrption = this.memoryGameManagerService.levelChanged$.subscribe( level =>{
+      this.initLevel();      
     });
   }
 
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
+    this._levelSubscrption.unsubscribe();
+    this._gameChangedSubscription.unsubscribe();
   }
 
   public get level(){
@@ -318,6 +327,11 @@ export class AppComponent implements OnInit, OnDestroy {
     } else if( next === false) {
       this.memoryGameManagerService.prevLevel();
     }    
+    this.initLevel();
+  }
+
+
+  private initLevel(){
     this._levelMetadata = this.memoryGameManagerService.getLevelMetadata();
     this._levelMetadata.data  =  this.memoryDataService.getRandomPairs(this._levelMetadata.cards/2);
     this._totalPairs = 0;

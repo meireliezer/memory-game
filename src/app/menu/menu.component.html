@@ -29,8 +29,11 @@
         </div>
         <div class="menu-page--section">
             <div class="menu-section--title">Results:</div>
-            <div class="mini-cards">
-                <div class="mini-card" *ngFor="let level of memoryGameManagerService.getGameMetadat()" [ngClass]="{'mini-card--disabled':!memoryGameManagerService.getLevelHistory(level.level)}">
+            <div class="mini-cards" >
+                <div class="mini-card" 
+                    *ngFor="let level of memoryGameManagerService.getGameMetadat()" 
+                    [ngClass]="{'mini-card--disabled':!memoryGameManagerService.getLevelHistory(level.level)}"
+                    (click)="onSelectLevel(level)">
                     <div class="mini-card--level">Level: {{level.level}}</div>
                     <div class="mini-card--paris">cards: 2 x {{level.cards/2}}</div>
                     <div class="mini-card--score">
