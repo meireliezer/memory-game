@@ -4,8 +4,8 @@
             <div class="menu-page--title">Menu</div>
             <div class="menu-page--close" (click)="onClose()">X</div>
         </div>
-        <div class="menu-page--settings">
-            <div class="setting--title">Settings:</div>
+        <div class="menu-page--section">
+            <div class="menu-section--title">Settings:</div>
 
             <div class="setting-item">
                 <div class="setting-item--title ">Sound:</div>
@@ -27,24 +27,26 @@
             </div>
 
         </div>
-        <div class="menu-page--levels">
-            <div>Results:</div>
-            <div class="mini-card">
-                <div>Level: 1</div>
-                <div>cards: 4</div>
-                <div>score: 4sec</div>
+        <div class="menu-page--section">
+            <div class="menu-section--title">Results:</div>
+            <div class="mini-cards">
+                <div class="mini-card" *ngFor="let level of memoryGameManagerService.getGameMetadat()" [ngClass]="{'mini-card--disabled':!memoryGameManagerService.getLevelHistory(level.level)}">
+                    <div class="mini-card--level">Level: {{level.level}}</div>
+                    <div class="mini-card--paris">cards: 2 x {{level.cards/2}}</div>
+                    <div class="mini-card--score">
+                        <div *ngIf="memoryGameManagerService.getLevelHistory(level.level) as levelData; else elseScore ">
+                                score: {{levelData.score}}
+                        </div>                        
+                        <ng-template #elseScore>
+                            score: -
+                        </ng-template>
+                </div>
             </div>
-            <div class="mini-card">
-                <div>Level: 2</div>
-                <div>cards: 6</div>
-                <div>score: 12sec</div>
-            </div>
-            <div class="mini-card">
-                <div>Level: 3</div>
-                <div>cards: 8</div>
-                <div>score: 14sec</div>
-            </div>
-        </div>
-        <div>Home</div>
+        </div>            
     </div>
+    <div class="menu-page--section">
+        <div class="menu-section--title">Go To:</div>
+        <div class="menu-btn">Home</div>
+    </div>
+    
 </div>

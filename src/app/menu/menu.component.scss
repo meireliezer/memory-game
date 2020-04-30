@@ -1,7 +1,9 @@
+
 .menu-page{    
   
-    --bb: 5px solid rgb(216, 40, 40);    
+    --bb: 5px solid rgb(196, 188, 188);    
     --clr-bg: rgba(0, 0, 0, 0.733);
+  
 
     z-index: 1000;
     background-color:var(--clr-bg);
@@ -57,11 +59,13 @@
     right: 100%;
 }
 
-.menu-page--settings {
-    border-bottom: var(--bb);      
+.menu-page--section:not(:last-of-type) {
+    border-bottom: var(--bb);  
+    padding-bottom: 0.5em;      
+    padding-top: 0.5em;  
 }
 
-.setting--title{
+.menu-section--title{
     font-size: 1.5rem; 
     font-weight: 900;     
     margin-bottom: 0.5em;
@@ -116,3 +120,47 @@
     transform: rotate(-45deg);
 }
 
+.mini-cards {
+    display: flex;
+    flex-wrap: wrap;
+    width: 75%;
+}
+
+.mini-card {    
+    border: 1px solid white;
+    border-radius: 5px;
+    margin: 0.1em;
+    padding: 0.3em;
+    cursor:pointer;
+    text-align: center;
+
+    &:hover {
+        background-color: rgba(214, 211, 211, 0.26);
+    }
+}
+
+
+.disabled {
+    pointer-events: none;
+    cursor: initial;
+    background-color: rgba(0, 0, 0, 0.315);
+}
+
+
+.mini-card--disabled {
+    @extend .disabled;
+
+    background-color: grey;
+}
+
+.menu-btn {
+    display: inline-block;
+    padding: 0.3em 0.9em;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;    
+
+    &:hover {
+        background-color: rgba(214, 211, 211, 0.26);
+    }
+}

@@ -10,7 +10,7 @@ interface IUserData {
   background: boolean;
 }
 
-interface ILevelData {
+export interface ILevelData {
   level: number;
   time: number;
   score: number;

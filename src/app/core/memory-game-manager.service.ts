@@ -1,6 +1,6 @@
 import { Injectable, Output } from '@angular/core';
 import { GAME_METADATA } from './game-metadata.const'
-import { UserDataService } from './windows/user-data.service';
+import { UserDataService, ILevelData } from './windows/user-data.service';
 import { Subject, Observable } from 'rxjs';
 
 export enum GAME {
@@ -85,6 +85,19 @@ export class MemoryGameManagerService {
 
   public getLevelMetadata() {
     return GAME_METADATA[this._currentLevel -1];
+  }
+
+
+  public getHistory() : ILevelData[] {
+    return this.userDataService.getLevelHistory();
+  }
+
+  public getLevelHistory(level: number){
+    return this.userDataService.getLevelHistory().find(item => item.level === level);
+  }
+
+  public getGameMetadat(){
+    return GAME_METADATA;
   }
 
   public nextLevel(){

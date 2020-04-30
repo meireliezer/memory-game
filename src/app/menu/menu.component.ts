@@ -19,12 +19,16 @@ export class MenuComponent implements OnInit {
   constructor(public menuService: MenuService,
               private soundService: SoundService,
               private vibrateService: VibrateService,
-              private memoryGameManagerService: MemoryGameManagerService
+              public memoryGameManagerService: MemoryGameManagerService
 
   ) { }
 
   ngOnInit() {    
     this.isIOS = iOS();
+
+    console.log(this.memoryGameManagerService.getHistory());
+    console.log(this.memoryGameManagerService.getGameMetadat());
+    console.log(this.memoryGameManagerService.getUserMaxLevel());
   }
 
 
