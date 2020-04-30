@@ -52,6 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _gameChangedSubscription: Subscription;
   private _mainTopScreenSubscription: Subscription;
   private _levelSubscrption: Subscription;
+  private _menuGoHomeSubscription:Subscription;
 
     
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
@@ -78,12 +79,21 @@ export class AppComponent implements OnInit, OnDestroy {
     this._levelSubscrption = this.memoryGameManagerService.levelChanged$.subscribe( level =>{
       this.initLevel();      
     });
+
+    this._menuGoHomeSubscription = this.menuService.home$.subscribe( () => {
+      this.removeMainTopScreen();
+      setTimeout( ()=> {
+        this.openningScreenService.display();
+      }, 750);
+      
+    })
   }
 
   ngOnDestroy(): void {
     this.fullscreenService.exitFullscreen();
     this._levelSubscrption.unsubscribe();
     this._gameChangedSubscription.unsubscribe();
+    this._menuGoHomeSubscription.unsubscribe();
   }
 
   public get level(){
@@ -124,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
 
-  public home(){    
+  public onMenu(){    
     this.clearMainInterval();       
     this.menuService.open();
 

@@ -1,6 +1,6 @@
-<!--
+
   <app-openning-screen #openning></app-openning-screen>
--->
+
 <app-menu></app-menu>
 
 <header class="header" [ngClass]="getBackgroundColor()">
@@ -8,7 +8,7 @@
   <div class="header__section score"> Score <div class="value">{{totalScore}}</div></div>
   <div class="header__section current_score">Timer <div class="value">{{current}}</div></div>
   <div class="header__section lives">&#x2764;<div class="value">{{lives}}</div></div>  
-  <div class="header__section_menu" (click)="home();">
+  <div class="header__section_menu" (click)="onMenu()">
     <div class="menu"></div>
   </div>
 </header>

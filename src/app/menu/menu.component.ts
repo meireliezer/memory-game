@@ -63,8 +63,12 @@ export class MenuComponent implements OnInit {
 
   public onSelectLevel(level: ILevelData){
     this.memoryGameManagerService.setLevel(level.level);
+    this.menuService.close();    
+  }
+
+  public onHome() {
     this.menuService.close();
-    
+    this.menuService.goHome();
   }
 
 
