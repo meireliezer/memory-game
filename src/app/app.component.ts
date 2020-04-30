@@ -332,6 +332,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private initLevel(){
+
+    this.removeMainTopScreen();
+
     this._levelMetadata = this.memoryGameManagerService.getLevelMetadata();
     this._levelMetadata.data  =  this.memoryDataService.getRandomPairs(this._levelMetadata.cards/2);
     this._totalPairs = 0;
@@ -425,6 +428,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private removeMainTopScreen(){
     if(this._mainTopScreenSubscription){
       this._mainTopScreenSubscription.unsubscribe();
+      this._mainTopScreenSubscription = null;
     }    
     this.mainTopScreen.remove();
   }
