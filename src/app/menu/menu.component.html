@@ -7,25 +7,26 @@
         <div class="menu-page--section">
             <div class="menu-section--title">Settings:</div>
 
-            <div class="setting-item">
-                <div class="setting-item--title ">Sound:</div>
-                <div class="setting-item--btn" 
-                        [ngClass]="{'crossed': (isSoundDisabled() || isIOS), 'disabled': isIOS }"
-                        (click)="toggleSound()" >♫</div>
+            <div class="setting-items">
+                <div class="setting-item">
+                    <div class="setting-item--title ">Sound:</div>
+                    <div class="setting-item--btn" 
+                            [ngClass]="{'crossed': (isSoundDisabled() || isIOS), 'disabled': isIOS }"
+                            (click)="toggleSound()" >♫</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-item--title">Vibration:</div>
+                    <div class="setting-item--btn crossed"
+                            [ngClass]="{'crossed': (isVibrateDisabled() || isIOS), 'disabled': isIOS }"
+                            (click)="toggleVibrate()">↭</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-item--title">Backgound:</div>
+                    <div class="setting-item--btn " 
+                            [ngClass]="{'crossed': isBackgroundDisabled()}"
+                            (click)="onBackgroundToggle()">bg</div>
+                </div>
             </div>
-            <div class="setting-item">
-                <div class="setting-item--title">Vibration:</div>
-                <div class="setting-item--btn crossed"
-                        [ngClass]="{'crossed': (isVibrateDisabled() || isIOS), 'disabled': isIOS }"
-                        (click)="toggleVibrate()">↭</div>
-            </div>
-            <div class="setting-item">
-                <div class="setting-item--title">Backgound:</div>
-                <div class="setting-item--btn " 
-                        [ngClass]="{'crossed': isBackgroundDisabled()}"
-                        (click)="onBackgroundToggle()">bg</div>
-            </div>
-
         </div>
         <div class="menu-page--section">
             <div class="menu-section--title">Results:</div>

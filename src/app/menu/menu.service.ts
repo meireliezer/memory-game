@@ -8,7 +8,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class MenuService {
 
 
-  private _open = new BehaviorSubject(false);
+  private _open = new BehaviorSubject(true);
   private _home = new Subject();
 
   constructor() { }

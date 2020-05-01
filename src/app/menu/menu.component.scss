@@ -190,6 +190,52 @@
     .mini-card {
         font-size: smaller;
     }
+}
 
+@media (orientation: landscape) {
+    .menu-page {
+        --bb: 1px solid rgb(196, 188, 188);  
+    }
+    .menu-page--title{
+        font-size: 1.2rem;
+    }
+
+    .menu-page--section:not(:last-of-type) {     
+        margin: 0;
+        padding: 0;                    
+    }
+
+
+    .menu-section--title{
+        margin-bottom: 0;
+    }
+
+    .setting-items {
+        display: flex;        
+    }
+
+    .setting-item{
+        border-right: 2px solid white;
+
+        &--title {
+            width: initial;
+            margin-right: 0.3em;
+            margin-left: 0.3em;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            
+        }
+        &--btn {
+            margin-right: 0.5em;
+            
+        }
+    }
+
+    .setting-item:last-of-type {
+        border-right:0
+    }
+    .mini-card--paris {
+        display: none;
+    }
 }
    
