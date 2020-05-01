@@ -35,7 +35,7 @@
                     [ngClass]="{'mini-card--disabled':!memoryGameManagerService.getLevelHistory(level.level)}"
                     (click)="onSelectLevel(level)">
                     <div class="mini-card--level">Level: {{level.level}}</div>
-                    <div class="mini-card--paris">cards: 2 x {{level.cards/2}}</div>
+                    <div class="mini-card--paris">cards: 2x{{level.cards/2}}</div>
                     <div class="mini-card--score">
                         <div *ngIf="memoryGameManagerService.getLevelHistory(level.level) as levelData; else elseScore ">
                                 score: {{levelData.score}}

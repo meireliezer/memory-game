@@ -17,7 +17,7 @@
     transition: transform ease-in 500ms;
 
     &.open {
-        transform: translatex(20%);
+        transform: translatex(40%);
     }
 }
 .menu-page--content{
@@ -121,9 +121,9 @@
 }
 
 .mini-cards {
-    display: flex;
-    flex-wrap: wrap;
-    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: max(60%, 200px);
 }
 
 .mini-card {    
@@ -154,15 +154,6 @@
 }
 
 
-@media (max-width:450px){
-    .mini-cards { 
-    }
-
-    .mini-card--paris {
-        display: none;
-    }
-}
-
 .menu-btn {
     display: inline-block;
     padding: 0.3em 0.9em;
@@ -174,3 +165,31 @@
         background-color: rgba(214, 211, 211, 0.26);
     }
 }
+
+
+
+
+@media (max-width:1045px){
+    .menu-page.open  { 
+        transform: translatex(20%);
+    }
+
+}
+
+@media (max-width:580px){
+    .mini-card--paris {
+        display: none;
+    }
+    .menu-page--title{ 
+        font-size: 1.5rem;
+    }
+
+    .menu-section--title {
+        font-size: 1rem;
+    }
+    .mini-card {
+        font-size: smaller;
+    }
+
+}
+   
