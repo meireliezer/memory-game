@@ -421,7 +421,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.onReset();
         break;
        case 'HOME':
-         this.home();
+        this.openningScreenService.display();
          break;
         case 'REVERSE_RUN':
           this.hideAll();

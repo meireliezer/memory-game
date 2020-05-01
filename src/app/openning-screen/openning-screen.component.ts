@@ -12,6 +12,8 @@ import { OpenningScreenService } from './openning-screen.service';
 })
 export class OpenningScreenComponent implements OnInit {
   
+  private first = true;
+
   constructor(private fullscreenService:FullScreenService,
               private memoryGameManagerService: MemoryGameManagerService, 
               public openningScreenService: OpenningScreenService) {
@@ -24,7 +26,11 @@ export class OpenningScreenComponent implements OnInit {
 
   public go(game: number){
     this.openningScreenService.hide();
-    this.fullscreenService.requestFullscreen();     
+    if(this.first){
+      this.fullscreenService.requestFullscreen();     
+      this.first = false;
+    }
+    
     this.memoryGameManagerService.setGame(<GAME>game);
     
 

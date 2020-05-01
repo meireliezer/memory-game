@@ -8,7 +8,7 @@ export class FullScreenService {
   constructor() { }
 
   public requestFullscreen(){
-    return;
+    
 
     
     var docElm:any = document.documentElement;
