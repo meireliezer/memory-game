@@ -203,29 +203,39 @@ export class AppComponent implements OnInit, OnDestroy {
             
       // Complete level      
       if(this.isComplete()){
+        
         // Stop timer
         this.clearMainInterval();
         // Game Complete state
 
-        if(this._gameState === GAME_STATE.CONTINUE){
-          this._gameState = GAME_STATE.FAILED_COMPLETE;
-        } else {
-          this._gameState = GAME_STATE.COMPLETE;
-        }        
-        // Store data
-        this.memoryGameManagerService.completeLevel(this.isFailedStatus(), 0, this.current);            
+        // If it was part of "continue state", then end here (no next level)
+        // TODO:: title ("Succeed, but failed")
+        if((this._gameState === GAME_STATE.CONTINUE) || (this.lives === 0) ){
+          let comp = (this.lives === 0)? GameOverComponent : LevelFailedComponent;
+          this.displayMainTopComponent(comp, false);
+          return;
+        }
+        
+        // Complete on time
+        this._gameState = GAME_STATE.COMPLETE;        
         this.vibrateService.complete();
         this.soundService.complete();
+        // Store data
+        this.memoryGameManagerService.completeLevel(this.isFailedStatus(), 0, this.current);            
 
-        if(this.level === this.memoryGameManagerService.getEndLevel() &&  (this._gameState === GAME_STATE.COMPLETE) ){
+        // Finish the game
+        if(this.level === this.memoryGameManagerService.getEndLevel()){
           this.displayMainTopComponent(GameCompleteComponent, null);
           return;
         }
 
         // Change to next level
-        setTimeout( () => {
-          this.setLevel(true); // TODO:: check if game finished
-        },1000);          
+        if(this.lives > 0 ) {
+          setTimeout( () => {
+            this.setLevel(true); // TODO:: check if game finished
+          },1000);          
+        }
+
        
       }
     } 
@@ -249,12 +259,9 @@ export class AppComponent implements OnInit, OnDestroy {
         if(this.memoryGameManagerService.getGame() == GAME.REVERSE){
           this.discoverAll();
           this.clearMainInterval();
-          this.changeLives(-1);          
-          if(this.lives === 0)  {
-            this.displayMainTopComponent(GameOverComponent, false);
-          } else {
-            this.displayMainTopComponent(LevelFailedComponent, false);
-          }
+          this.changeLives(-1);   
+          let comp = (this.lives === 0)? GameOverComponent: LevelFailedComponent;
+          this.displayMainTopComponent(comp, false);
         }
         
           
@@ -288,30 +295,20 @@ export class AppComponent implements OnInit, OnDestroy {
       // Time out
       // ----------------------------------------------
       if (this.current === 0) {
+
+        // End interval
         this.clearMainInterval();
-        // Succeed on the second (go to next level)
-        if (this.isComplete()) {
-          this._gameState = GAME_STATE.COMPLETE;
-          setTimeout(() => {
-            this.setLevel(true); // TODO:: check if game finished
-          }, 1000);
-          // Failed
-        }
-        else {
-          this._gameState = GAME_STATE.FAILED;
-          this.soundService.failed();
-          // Only if it is  user max level            
-          if (this.level === this.memoryGameManagerService.getUserMaxLevel()) {
-            this.changeLives(-1);
-          }
-          // Time end (due to time), alow continue till end          
-          if (this.lives === 0) {
-            this.displayMainTopComponent(GameOverComponent, true);
-          }
-          else {
-            this.displayMainTopComponent(LevelFailedComponent, true);
-          }
-        }
+        
+        this._gameState = GAME_STATE.FAILED;
+        this.soundService.failed();
+
+        // Reduce life only        
+        this.changeLives(-1);
+        
+        // Life End: - Game Over, alow contine        
+        let isRegularGame = this.memoryGameManagerService.getGame() === GAME.REGULAR;
+        let comp = (this.lives === 0) ?GameOverComponent: LevelFailedComponent;
+        this.displayMainTopComponent(comp, isRegularGame);
       }
     }, 1000);
   }
@@ -386,6 +383,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private changeLives(deltaLives: number) {
+    // Don't change life if this is not the max level
+    if(this.level !== this.memoryGameManagerService.getUserMaxLevel()){
+      return;
+    }
+
     this.lives += deltaLives;
     if(this.lives < 0 ){
       this.lives = 0;     
