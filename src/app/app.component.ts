@@ -286,6 +286,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private mainInterval() {
+    if(this._intervalHandler){
+      debugger;      
+    }
+
+    this.clearMainInterval();
+
     this._intervalHandler = setInterval(() => {
       // Score
       if (this.current > 0) {
@@ -367,7 +373,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private initLevel(){
 
     this.removeMainTopScreen();
-
+    this._firstCardClicked = null;
     this._levelMetadata = this.memoryGameManagerService.getLevelMetadata();
     this._levelMetadata.data  =  this.memoryDataService.getRandomPairs(this._levelMetadata.cards/2);
     this._totalPairs = 0;

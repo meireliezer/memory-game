@@ -1,7 +1,7 @@
 <div class="menu-page" [ngClass]="{'open': (menuService.open$|async)}">
     <div class="menu-page--content">
         <div class="menu-page--header">
-            <div class="menu-page--title">Menu</div>
+            <div class="menu-page--title">Menu <small> (Version: 1.0) </small></div>
             <div class="menu-page--close" (click)="onClose()">X</div>
         </div>
         <div class="menu-page--section">
@@ -33,7 +33,7 @@
             <div class="mini-cards" >
                 <div class="mini-card" 
                     *ngFor="let level of memoryGameManagerService.getGameMetadat()" 
-                    [ngClass]="{'mini-card--disabled':!memoryGameManagerService.getLevelHistory(level.level)}"
+                    [ngClass]="{'mini-card--disabled':(level.level >memoryGameManagerService.getUserMaxLevel())}"
                     (click)="onSelectLevel(level)">
                     <div class="mini-card--level">Level: {{level.level}}</div>
                     <div class="mini-card--paris">cards: 2x{{level.cards/2}}</div>
