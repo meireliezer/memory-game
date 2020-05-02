@@ -59,6 +59,7 @@ export class MenuComponent implements OnInit {
 
   public onClose(){
     this.menuService.close();
+    
   }
 
   public onSelectLevel(level: ILevelData){
