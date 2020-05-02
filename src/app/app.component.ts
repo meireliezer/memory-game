@@ -286,10 +286,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
   private mainInterval() {
-    if(this._intervalHandler){
+/*    if(this._intervalHandler){
       debugger;      
     }
-
+*/
     this.clearMainInterval();
 
     this._intervalHandler = setInterval(() => {
