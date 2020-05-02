@@ -68,7 +68,12 @@ export class MenuComponent implements OnInit {
 
   public onHome() {
     this.menuService.close();
-    this.menuService.goHome();
+    this.menuService.action('HOME');
+  }
+
+  public onRestart() {
+    this.menuService.close();
+    this.menuService.action('RESTART');
   }
 
 

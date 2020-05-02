@@ -9,7 +9,7 @@ export class MenuService {
 
 
   private _open = new BehaviorSubject(false);
-  private _home = new Subject();
+  private _action = new Subject();
 
   constructor() { }
 
@@ -17,8 +17,8 @@ export class MenuService {
     return this._open.asObservable();
   } 
 
-  public get home$() {
-    return this._home.asObservable();
+  public get action$() {
+    return this._action.asObservable();
   }
 
   public open() {
@@ -29,7 +29,7 @@ export class MenuService {
     this._open.next(false);
   }
 
-  public goHome(){
-    this._home.next();
+  public action(commnad: string){
+    this._action.next(commnad);
   }
 }

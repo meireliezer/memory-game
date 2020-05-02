@@ -80,11 +80,20 @@ export class AppComponent implements OnInit, OnDestroy {
       this.initLevel();      
     });
 
-    this._menuGoHomeSubscription = this.menuService.home$.subscribe( () => {
+    this._menuGoHomeSubscription = this.menuService.action$.subscribe( (command) => {
       this.removeMainTopScreen();
-      setTimeout( ()=> {
-        this.openningScreenService.display();
-      }, 750);
+
+      switch(command){
+        case 'HOME':
+          setTimeout( ()=> {
+            this.openningScreenService.display();
+          }, 750);    
+          break;
+
+        case 'RESTART':
+          this.onReset();
+          break;
+      }
       
     })
   }

@@ -27,7 +27,7 @@ import { MenuComponent } from './menu/menu.component';
   imports: [
     BrowserModule,
     //ServiceWorkerModule.register('./memory-game-dist/ngsw-worker.js', { enabled: environment.production }),
-  //  AppRoutingModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent],
