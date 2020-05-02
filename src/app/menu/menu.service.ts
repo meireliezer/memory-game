@@ -27,6 +27,7 @@ export class MenuService {
 
   public close() {
     this._open.next(false);
+    this._action.next('CLOSE');
   }
 
   public action(commnad: string){

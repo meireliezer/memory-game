@@ -52,7 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private _gameChangedSubscription: Subscription;
   private _mainTopScreenSubscription: Subscription;
   private _levelSubscrption: Subscription;
-  private _menuGoHomeSubscription:Subscription;
+  private _menuActionSubscription:Subscription;
+  private _isPause: boolean;
 
     
   constructor(private memoryGameManagerService: MemoryGameManagerService, 
@@ -80,18 +81,32 @@ export class AppComponent implements OnInit, OnDestroy {
       this.initLevel();      
     });
 
-    this._menuGoHomeSubscription = this.menuService.action$.subscribe( (command) => {
-      this.removeMainTopScreen();
+    this._menuActionSubscription = this.menuService.action$.subscribe( (command) => {
+      
 
       switch(command){
         case 'HOME':
+          this.removeMainTopScreen();
           setTimeout( ()=> {
             this.openningScreenService.display();
           }, 750);    
           break;
 
         case 'RESTART':
+          this.removeMainTopScreen();
           this.onReset();
+          break;
+
+        case 'CLOSE':
+          if(this._isPause && 
+              !( (this._gameState === GAME_STATE.COMPLETE) ||
+              (this._gameState === GAME_STATE.FAILED_COMPLETE) || 
+              (this._gameState === GAME_STATE.FAILED)
+              )){
+                this.mainInterval();
+          }
+          
+          this._isPause = false;
           break;
       }
       
@@ -102,7 +117,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.fullscreenService.exitFullscreen();
     this._levelSubscrption.unsubscribe();
     this._gameChangedSubscription.unsubscribe();
-    this._menuGoHomeSubscription.unsubscribe();
+    this._menuActionSubscription.unsubscribe();
   }
 
   public get level(){
@@ -143,9 +158,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
 
+  
+
   public onMenu(){    
+    this._isPause = true;
     this.clearMainInterval();       
     this.menuService.open();
+
 
     //this.openningScreenService.display();  
   }
@@ -254,50 +273,48 @@ export class AppComponent implements OnInit, OnDestroy {
       this.setLevel();
       return;
     }
-  
     this._gameState = GAME_STATE.RUN;
-    this._intervalHandler = setInterval(()=>{
-      
-      // Score
-      if(this.current > 0 ){
-        --this.current;
-      } 
+    this.mainInterval();
+  }
 
+
+  private mainInterval() {
+    this._intervalHandler = setInterval(() => {
+      // Score
+      if (this.current > 0) {
+        --this.current;
+      }
       // ----------------------------------------------
       // Time out
       // ----------------------------------------------
-      if(this.current === 0){
-
+      if (this.current === 0) {
         this.clearMainInterval();
-
         // Succeed on the second (go to next level)
-        if(this.isComplete()){
-            this._gameState = GAME_STATE.COMPLETE;
-            setTimeout( () => {
-              this.setLevel(true); // TODO:: check if game finished
-            },1000);
-
-        // Failed
-        } else {                     
-            this._gameState = GAME_STATE.FAILED;
-            this.soundService.failed();
-            
-            // Only if it is  user max level            
-            if(this.level === this.memoryGameManagerService.getUserMaxLevel()){
-              this.changeLives(-1);            
-            }            
-          
-          // Time end (due to time), alow continue till end          
-          if(this.lives === 0){
-            this.displayMainTopComponent(GameOverComponent, true);            
-          }else {
-            this.displayMainTopComponent(LevelFailedComponent, true);          
-          }      
+        if (this.isComplete()) {
+          this._gameState = GAME_STATE.COMPLETE;
+          setTimeout(() => {
+            this.setLevel(true); // TODO:: check if game finished
+          }, 1000);
+          // Failed
         }
-      }        
+        else {
+          this._gameState = GAME_STATE.FAILED;
+          this.soundService.failed();
+          // Only if it is  user max level            
+          if (this.level === this.memoryGameManagerService.getUserMaxLevel()) {
+            this.changeLives(-1);
+          }
+          // Time end (due to time), alow continue till end          
+          if (this.lives === 0) {
+            this.displayMainTopComponent(GameOverComponent, true);
+          }
+          else {
+            this.displayMainTopComponent(LevelFailedComponent, true);
+          }
+        }
+      }
     }, 1000);
   }
-
 
   public onReset(){
     this.memoryGameManagerService.reset();
@@ -359,6 +376,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this._totalPairs = 0;
     this._gameState = GAME_STATE.INIT;
     this.current = this._levelMetadata.score;
+    this._isPause = false;
     this.clearMainInterval();
    
     if(this.memoryGameManagerService.getGame() === GAME.REVERSE){      
@@ -408,6 +426,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this._intervalHandler = null;
   }
 
+  
  
   private displayMainTopComponent<T>(comp:Type<T>, data:any){
     let componentFactory = this.cfr.resolveComponentFactory(comp);
