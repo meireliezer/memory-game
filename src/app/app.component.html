@@ -3,12 +3,21 @@
 
 <app-menu></app-menu>
 
+
+<style>
+
+</style>
 <header class="header" [ngClass]="getBackgroundColor()">
-  <div class="header__section level">Level<div class="value">{{level}}</div></div>
-  <div class="header__section score"> Score <div class="value">{{totalScore}}</div></div>
-  <div class="header__section current_score">Timer <div class="value">{{current}}</div></div>
-  <div class="header__section lives">&#x2764;<div class="value">{{lives}}</div></div>  
-  <div class="header__section_menu" (click)="onMenu()">
+  <div class="header__section header__section--left">
+    <div class="level">Level:<div class="value">{{level}}</div></div>
+    <div class="score">Score: <div class="value">{{totalScore}}</div></div>    
+  </div>
+  <div class="header__section header__section--center">
+    <div class="current_score">Timer: <div class="value">{{current}}</div></div>
+    <div class="lives">&#x2764;:<div class="value">{{lives}}</div></div>  
+  
+  </div>
+  <div class="header__section header__section--right header__section_menu " (click)="onMenu()">
     <div class="menu"></div>
   </div>
 </header>

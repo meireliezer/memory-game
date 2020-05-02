@@ -3,24 +3,28 @@ header {
     justify-content: space-between;
     background-color: #{var(--clr-primary)};
     transition: background-color linear 500ms ;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
 
-    .header__section  {                                
-        width: 25%;
-        text-align: center;
+    .header__section  {                                           
         font-weight: bold;                        
-        padding: 0.3em;
-        border: 1px solid black;
-        
-        
-    }
-    .value {
-        text-align: center;
-        font-weight: normal;        
+        padding: 0.3em;                       
     }
 
-    .heart {
-        color: red;
-    }   
+    .header__section--left {
+        margin-left: 1em;                
+    }
+    .header__section--center{
+        text-align: center;    
+    }
+    .header__section--right {
+        margin-right: 1em;
+        
+    }
+    .value {        
+        font-weight: normal;    
+        display: inline-block;    
+    }
 }
 
 .game-warning {
@@ -35,7 +39,7 @@ header {
     background-color: rgb(255, 0, 0);
 }
 
-.header__section_menu{
+.header__section_menu{    
     width: 3em;
     height: 100%;
     background-color: var(--clr-primary);
@@ -81,4 +85,5 @@ header {
     }
 
 }
+
 
