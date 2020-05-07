@@ -196,7 +196,7 @@
     margin-right: 0.3em;
 }
 
-@media (orientation: landscape) {
+@media (max-height: 550px) {
     .menu-page {
         --bb: 1px solid rgb(196, 188, 188);  
     }
